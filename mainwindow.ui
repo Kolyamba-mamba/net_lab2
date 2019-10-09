@@ -29,7 +29,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QSpinBox" name="queueLengthSpinBox"/>
+           <widget class="QSpinBox" name="queueLengthSpinBox">
+            <property name="maximum">
+             <number>50</number>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_2">
@@ -39,7 +43,14 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="inputStreamSpinBox"/>
+           <widget class="QDoubleSpinBox" name="inputStreamSpinBox">
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.050000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_3">
@@ -49,7 +60,14 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="workStreamSpinBox"/>
+           <widget class="QDoubleSpinBox" name="workStreamSpinBox">
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.050000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_4">
@@ -57,9 +75,6 @@
              <string>Количество требований</string>
             </property>
            </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="countRequestSpinBox"/>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_5">
@@ -74,6 +89,9 @@
              <string>Закон обслуживания</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QSpinBox" name="countRequestSpinBox"/>
           </item>
          </layout>
         </item>
