@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -21,9 +21,6 @@ class Ui_MainWindow(object):
         self.mainLayout.setObjectName("mainLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.CalcBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.CalcBtn.setObjectName("CalcBtn")
-        self.verticalLayout.addWidget(self.CalcBtn)
         self.formLayout = QtWidgets.QFormLayout()
         self.formLayout.setObjectName("formLayout")
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -57,23 +54,18 @@ class Ui_MainWindow(object):
         self.label_6.setObjectName("label_6")
         self.formLayout.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.label_6)
         self.verticalLayout.addLayout(self.formLayout)
+        self.CalcBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.CalcBtn.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.CalcBtn.setObjectName("CalcBtn")
+        self.verticalLayout.addWidget(self.CalcBtn)
         self.mainLayout.addLayout(self.verticalLayout)
         self.graphLayout = QtWidgets.QVBoxLayout()
         self.graphLayout.setObjectName("graphLayout")
-        self.firstWdg = QtWidgets.QWidget(self.centralwidget)
-        self.firstWdg.setObjectName("firstWdg")
-        self.graphLayout.addWidget(self.firstWdg)
-        self.secondWdg = QtWidgets.QWidget(self.centralwidget)
-        self.secondWdg.setObjectName("secondWdg")
-        self.graphLayout.addWidget(self.secondWdg)
-        self.thirdWdg = QtWidgets.QWidget(self.centralwidget)
-        self.thirdWdg.setObjectName("thirdWdg")
-        self.graphLayout.addWidget(self.thirdWdg)
         self.mainLayout.addLayout(self.graphLayout)
         self.gridLayout.addLayout(self.mainLayout, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 958, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 958, 20))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -86,12 +78,12 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.CalcBtn.setText(_translate("MainWindow", "Calculate"))
         self.label.setText(_translate("MainWindow", "Длина очереди"))
         self.label_2.setText(_translate("MainWindow", "Интенсивность входного потока"))
         self.label_3.setText(_translate("MainWindow", "Интенсивность обслуживания"))
         self.label_4.setText(_translate("MainWindow", "Количество требований"))
         self.label_5.setText(_translate("MainWindow", "Закон поступления"))
         self.label_6.setText(_translate("MainWindow", "Закон обслуживания"))
+        self.CalcBtn.setText(_translate("MainWindow", "Calculate"))
 
 

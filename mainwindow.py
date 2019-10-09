@@ -9,12 +9,13 @@ import matplotlib
 matplotlib.use('QT5Agg')
 
 import matplotlib.pylab as plt
+import numpy as np
 
 
 def addPlotToLayout(plot, layout: QLayout):
-    from matplotlib.backends.backend_qt5agg import FigureCanvasQT
+    from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     # from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-    layout.addWidget(FigureCanvasQT(plot))
+    layout.addWidget(FigureCanvas(plot))
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -41,3 +42,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def calculate_SLOT(self):
         print(self.getDataFromUI())
+        
+        arr = np.arange(0., 10., 0.5)
+        fig, ax1 = plt.subplots()
+        ax1.plot(arr)
+        addPlotToLayout(fig, self.graphLayout)
