@@ -15,8 +15,9 @@ import numpy as np
 def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     # from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+    for i in reversed(range(layout.count())):
+        layout.itemAt(i).widget().deleteLater()
     layout.addWidget(FigureCanvas(plot))
-
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -129,7 +130,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
         ax2.plot(thingsToShow[3]["x"],thingsToShow[3]["y"], color='red')
-        addPlotToLayout(fig2, self.graphLayout)
+        addPlotToLayout(fig2, self.graphLayout1)
 
 
 
