@@ -114,12 +114,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def calculate_SLOT(self):
         input = self.getDataFromUI()
-        #print(input)
-        print(self.modellingSMO(input))
+        # print(input)
+        # print(self.modellingSMO(input))
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
         
-        # thingsToShow = modellingSMO(self.getDataFromUI())
-        
-        #fig, ax1 = plt.subplots()
-        #ax1.plot(x,y)
-        #addPlotToLayout(fig, self.graphLayout)
+        thingsToShow = self.modellingSMO(self.getDataFromUI())
+
+        ax.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
+        ax.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green')
+        ax.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red')
+        addPlotToLayout(fig, self.graphLayout)
+
+
 
