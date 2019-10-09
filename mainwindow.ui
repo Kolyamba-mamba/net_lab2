@@ -129,12 +129,6 @@
       <item>
        <layout class="QVBoxLayout" name="bigLayout">
         <item>
-         <layout class="QVBoxLayout" name="graphLayout2"/>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="graphLayout1"/>
-        </item>
-        <item>
          <layout class="QVBoxLayout" name="graphLayout"/>
         </item>
         <item>
@@ -162,7 +156,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
