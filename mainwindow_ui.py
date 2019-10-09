@@ -61,6 +61,8 @@ class Ui_MainWindow(object):
         self.mainLayout.addLayout(self.verticalLayout)
         self.graphLayout = QtWidgets.QVBoxLayout()
         self.graphLayout.setObjectName("graphLayout")
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.graphLayout.addItem(spacerItem)
         self.mainLayout.addLayout(self.graphLayout)
         self.gridLayout.addLayout(self.mainLayout, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
