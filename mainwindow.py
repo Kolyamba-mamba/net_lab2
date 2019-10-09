@@ -18,6 +18,7 @@ def addPlotToLayout(plot, layout: QLayout):
     layout.addWidget(FigureCanvas(plot))
 
 
+
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         np.random.seed(1) # удалить после дебага
@@ -116,16 +117,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         input = self.getDataFromUI()
         # print(input)
         # print(self.modellingSMO(input))
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        
         thingsToShow = self.modellingSMO(self.getDataFromUI())
-
+        
+        fig1 = plt.figure()
+        ax = fig1.add_subplot(111)
         ax.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
         ax.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green')
         ax.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red')
-        addPlotToLayout(fig, self.graphLayout)
+        addPlotToLayout(fig1, self.graphLayout)
+
+        fig2 = plt.figure()
+        ax2 = fig2.add_subplot(111)
+        ax2.plot(thingsToShow[3]["x"],thingsToShow[3]["y"], color='red')
+        addPlotToLayout(fig2, self.graphLayout)
+
+
 
 
 
