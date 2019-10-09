@@ -42,41 +42,70 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         currentTime = 0
         requestsGot = 0
         # в начале ни одной заявки нет
-        statGot = [[0,0],]
-        statDone = [[0,0],]
-        statRefused = [[0,0],]
-        statQueue = [[0,0],]
+        statGot = {'x':[0], 'y':[0]}
+        statDone = {'x':[0], 'y':[0]}
+        statRefused = {'x':[0], 'y':[0]}
+        statQueue = {'x':[0], 'y':[0]}
+        curGot = 0
+        curDone = 0
+        curRefused = 0
+        curQueue = 0
         timeNew = self.random(input["input_stream"]) # время, когда придёт новая заявка
         timeDone = None # время, когда текущая заявка будет сделана (None, если заявок пока нет)
 
         while (requestsGot<input["count_requests"]):
             if (timeDone != None and timeDone <= timeNew): # обслужена очередная заявка
                 currentTime = timeDone # переставляем время на время выполнения заявки
-                statDone.append([currentTime, statDone[len(statDone)-1]]) # добавляем точку на график
-                statDone.append([currentTime, statDone[len(statDone)-1]+1])
+                statDone["x"].append(currentTime)   # добавляем точку на график
+                statDone["y"].append(curDone)
+                curDone+=1
+                statDone["x"].append(currentTime)
+                statDone["y"].append(curDone)
                 if (queueSize==0):
                     timeDone = None # если очередь пуста, то никто не обслуживается и времени обслуживания нет
                 else:
                     queueSize-=1 # в ином случае выполняем следующую заявку
-                    statQueue.append([currentTime, statQueue[len(statQueue)-1]]) # добавляем точку на график
-                    statQueue.append([currentTime, statQueue[len(statQueue)-1]-1])
+                    statQueue["x"].append(currentTime)   # добавляем точку на график
+                    statQueue["y"].append(curQueue)
+                    curQueue -= 1
+                    statQueue["x"].append(currentTime)
+                    statQueue["y"].append(curQueue)
                     timeDone = currentTime + self.random(input["work_stream"])
             else: # прибыла новая заявка
                 requestsGot+=1
                 currentTime = timeNew
                 timeNew = currentTime + self.random(input["input_stream"])
-                statGot.append([currentTime, statGot[len(statGot)-1]]) # добавляем точку на график
-                statGot.append([currentTime, statGot[len(statGot)-1]+1])
+                statGot["x"].append(currentTime)   # добавляем точку на график
+                statGot["y"].append(curGot)
+                curGot+=1
+                statGot["x"].append(currentTime)
+                statGot["y"].append(curGot)
                 if (timeDone==None): # если канал свободен, обслуживаем заявку сразу
                     timeDone = currentTime + self.random(input["work_stream"])
                 else: # иначе пытаемся добавить в очередь
                     if (queueSize<input["queue_length"]):
                         queueSize+=1
-                        statQueue.append([currentTime, statQueue[len(statQueue)-1]]) # добавляем точку на график
-                        statQueue.append([currentTime, statQueue[len(statQueue)-1]+1])
+                        statQueue["x"].append(currentTime)   # добавляем точку на график
+                        statQueue["y"].append(curQueue)
+                        curQueue+=1
+                        statQueue["x"].append(currentTime)
+                        statQueue["y"].append(curQueue)
                     else:
-                        statRefused.append([currentTime, statRefused[len(statRefused)-1]]) # добавляем точку на график
-                        statRefused.append([currentTime, statRefused[len(statRefused)-1]+1])
+                        statRefused["x"].append(currentTime)   # добавляем точку на график
+                        statRefused["y"].append(curRefused)
+                        curRefused += 1
+                        statRefused["x"].append(currentTime)
+                        statRefused["y"].append(curRefused)
+
+        # добавляем точки на краю
+        statDone["x"].append(currentTime)
+        statDone["y"].append(curDone)
+        statGot["x"].append(currentTime)
+        statGot["y"].append(curGot)
+        statQueue["x"].append(currentTime)
+        statQueue["y"].append(curQueue)
+        statRefused["x"].append(currentTime)   
+        statRefused["y"].append(curRefused)
         return [statGot, statDone, statRefused, statQueue]
                 
 
@@ -84,14 +113,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
 
     def calculate_SLOT(self):
-        #input = self.getDataFromUI()
+        input = self.getDataFromUI()
         #print(input)
-        #print(self.modellingSMO(input))
+        print(self.modellingSMO(input))
         
         # thingsToShow = modellingSMO(self.getDataFromUI())
         
-        arr = np.array([0., 0.5, 1., 1.5, 2., 2.5, 6.])
-        fig, ax1 = plt.subplots()
-        ax1.plot(arr)
-        addPlotToLayout(fig, self.graphLayout)
+        #fig, ax1 = plt.subplots()
+        #ax1.plot(x,y)
+        #addPlotToLayout(fig, self.graphLayout)
 
