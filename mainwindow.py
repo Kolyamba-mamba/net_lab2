@@ -99,14 +99,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         statRefused["y"].append(curRefused)
 
         # добавляем точки на краю
-        statDone["x"].append(currentTime)
-        statDone["y"].append(curDone)
         statGot["x"].append(currentTime)
         statGot["y"].append(curGot)
-        statQueue["x"].append(currentTime)
-        statQueue["y"].append(curQueue)
+        statDone["x"].append(currentTime)
+        statDone["y"].append(curDone)
         statRefused["x"].append(currentTime)   
         statRefused["y"].append(curRefused)
+        statQueue["x"].append(currentTime)
+        statQueue["y"].append(curQueue)
         return [statGot, statDone, statRefused, statQueue]
                 
 
@@ -118,7 +118,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # print(input)
         # print(self.modellingSMO(input))
         thingsToShow = self.modellingSMO(self.getDataFromUI())
-        
+
         fig1 = plt.figure()
         ax = fig1.add_subplot(111)
         ax.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
