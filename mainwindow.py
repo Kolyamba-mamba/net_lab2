@@ -15,9 +15,12 @@ import numpy as np
 def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     # from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-    for i in reversed(range(layout.count())):
-        layout.itemAt(i).widget().deleteLater()
     layout.addWidget(FigureCanvas(plot))
+
+def clearLayout(layout: QLayout):
+    for i in reversed(range(layout.count())):
+        layout.removeItem(layout.itemAt(i))
+
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -110,15 +113,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         statQueue["y"].append(curQueue)
         return [statGot, statDone, statRefused, statQueue]
                 
-
-    def showPlot(self):
-        pass
-
     def calculate_SLOT(self):
-        input = self.getDataFromUI()
         # print(input)
         # print(self.modellingSMO(input))
         thingsToShow = self.modellingSMO(self.getDataFromUI())
+        
+        clearLayout(self.graphLayout)
 
         fig1 = plt.figure()
         ax = fig1.add_subplot(111)
@@ -130,7 +130,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
         ax2.plot(thingsToShow[3]["x"],thingsToShow[3]["y"], color='red')
-        addPlotToLayout(fig2, self.graphLayout1)
+        addPlotToLayout(fig2, self.graphLayout)
 
 
 
