@@ -22,10 +22,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__()
         self.setupUi(self)
 
+        self.CalcBtn.clicked.connect(self.calculate_SLOT)
+
     def getDataFromUI(self):
         return {
             "count_requests": self.countRequestSpinBox.value(),
-            "input_stream": self.inputStreamSpinBox.value()
+            "input_stream": self.inputStreamSpinBox.value(),
+            "queue_length": self.queueLengthSpinBox.value(),
+            "request_count": self.countRequestSpinBox.value(),
+            "work_stream": self.workStreamSpinBox.value()
         }
 
     def modellingSMO(self):
@@ -33,3 +38,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def showPlot(self):
         pass
+
+    def calculate_SLOT(self):
+        print(self.getDataFromUI())
