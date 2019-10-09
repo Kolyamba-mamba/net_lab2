@@ -119,6 +119,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         thingsToShow = self.modellingSMO(self.getDataFromUI())
         
         clearLayout(self.graphLayout)
+        plt.close('all')
 
         fig1 = plt.figure()
         ax = fig1.add_subplot(111)
