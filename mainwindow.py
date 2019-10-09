@@ -5,19 +5,17 @@ from PyQt5.QtCore import *
 from mainwindow_ui import Ui_MainWindow
 
 import matplotlib
+
 matplotlib.use('QT5Agg')
 
 import matplotlib.pylab as plt
 
 
-def setPlotOnWidget(plot, widget):
+def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQT
     # from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-    # self.plotWidget = FigureCanvas(fig)
-    # lay = QtWidgets.QVBoxLayout(self.content_plot)
-    # lay.setContentsMargins(0, 0, 0, 0)
-    # lay.addWidget(self.plotWidget)
-    pass
+    layout.addWidget(FigureCanvasQT(plot))
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -25,12 +23,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
     def getDataFromUI(self):
-        pass
+        return {
+            "count_requests": self.countRequestSpinBox.value(),
+            "input_stream": self.inputStreamSpinBox.value()
+        }
 
     def modellingSMO(self):
         pass
 
     def showPlot(self):
         pass
-
-
