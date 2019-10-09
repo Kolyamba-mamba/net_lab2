@@ -20,6 +20,7 @@ def addPlotToLayout(plot, layout: QLayout):
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
+        np.random.seed(1) # удалить после дебага
         super(MainWindow, self).__init__()
         self.setupUi(self)
 
@@ -33,6 +34,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "request_count": self.countRequestSpinBox.value(),
             "work_stream": self.workStreamSpinBox.value()
         }
+
+    def random(self, scale):
+        return np.random.exponential(scale)
 
     def modellingSMO(self):
         input = self.getDataFromUI()
@@ -50,13 +54,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while (requestsGot<input["count_requests"]):
             if (timeDone != None and timeDone <= timeNew): # обслужена очередная заявка
                 currentTime = timeDone # переставляем время на время выполнения заявки
-                statDone.append([currentTime, statDone[len(statDone)-1]) # добавляем две точки на график
-                statDone.append([currentTime, statDone[len(statDone)-1]+1)
+                statDone.append([currentTime, statDone[len(statDone)-1]]) # добавляем точку на график
+                statDone.append([currentTime, statDone[len(statDone)-1]+1])
                 if (queueSize==0):
                     timeDone = None # если очередь пуста, то никто не обслуживается и времени обслуживания нет
                 else:
                     queueSize-=1 # в ином случае выполняем следующую заявку
+                    statQueue.append([currentTime, statQueue[len(statQueue)-1]]) # добавляем точку на график
+                    statQueue.append([currentTime, statQueue[len(statQueue)-1]-1])
                     timeDone = currentTime + self.random(input["work_stream"])
+            else: # прибыла новая заявка
+                requestsGot+=1
+                currentTime = timeNew
+                statGot.append([currentTime, statGot[len(statGot)-1]]) # добавляем точку на график
+                statGot.append([currentTime, statGot[len(statGot)-1]+1])
+                if (timeDone==None): # если канал свободен, обслуживаем заявку сразу
+                    timeDone = currentTime + self.random(input["work_stream"])
+                else: # иначе пытаемся добавить в очередь
+                    if (queueSize<input["queue_length"]):
+                        queueSize+=1
+                        statQueue.append([currentTime, statQueue[len(statQueue)-1]]) # добавляем точку на график
+                        statQueue.append([currentTime, statQueue[len(statQueue)-1]+1])
+                    else:
+                        statRefused.append([currentTime, statRefused[len(statRefused)-1]]) # добавляем точку на график
+                        statRefused.append([currentTime, statRefused[len(statRefused)-1]+1])
+        return [statGot, statDone, statRefused, statQueue]
+                
 
     def showPlot(self):
         pass
