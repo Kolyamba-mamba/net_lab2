@@ -31,15 +31,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),
-            "request_count": self.countRequestSpinBox.value(),
             "work_stream": self.workStreamSpinBox.value()
         }
 
     def random(self, scale):
         return np.random.exponential(scale)
 
-    def modellingSMO(self):
-        input = self.getDataFromUI()
+    def modellingSMO(self, input):
         queueSize = 0
         currentTime = 0
         requestsGot = 0
@@ -48,9 +46,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         statDone = [[0,0],]
         statRefused = [[0,0],]
         statQueue = [[0,0],]
-
         timeNew = self.random(input["input_stream"]) # время, когда придёт новая заявка
         timeDone = None # время, когда текущая заявка будет сделана (None, если заявок пока нет)
+
         while (requestsGot<input["count_requests"]):
             if (timeDone != None and timeDone <= timeNew): # обслужена очередная заявка
                 currentTime = timeDone # переставляем время на время выполнения заявки
@@ -66,6 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else: # прибыла новая заявка
                 requestsGot+=1
                 currentTime = timeNew
+                timeNew = currentTime + self.random(input["input_stream"])
                 statGot.append([currentTime, statGot[len(statGot)-1]]) # добавляем точку на график
                 statGot.append([currentTime, statGot[len(statGot)-1]+1])
                 if (timeDone==None): # если канал свободен, обслуживаем заявку сразу
@@ -85,9 +84,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
 
     def calculate_SLOT(self):
-        print(self.getDataFromUI())
+        #input = self.getDataFromUI()
+        #print(input)
+        #print(self.modellingSMO(input))
         
-        arr = np.arange(0., 10., 0.5)
+        # thingsToShow = modellingSMO(self.getDataFromUI())
+        
+        arr = np.array([0., 0.5, 1., 1.5, 2., 2.5, 6.])
         fig, ax1 = plt.subplots()
         ax1.plot(arr)
         addPlotToLayout(fig, self.graphLayout)
+
