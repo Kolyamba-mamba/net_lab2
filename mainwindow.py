@@ -43,19 +43,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
                 
     def calculate_SLOT(self):
-        # print(input)
-        # print(self.modellingSMO(input))
         thingsToShow = modellingSMO(self.getDataFromUI())
-        print(thingsToShow[4])
         
         clearLayout(self.graphLayout)
         plt.close('all')
 
         fig1 = plt.figure()
-        ax = fig1.add_subplot(111)
-        ax.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
-        ax.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green')
-        ax.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red')
+        ax1 = fig1.add_subplot(111)
+        ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
+        ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green')
+        ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red')
         addPlotToLayout(fig1, self.graphLayout)
 
         fig2 = plt.figure()
@@ -72,7 +69,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         def search_max_end_stream(stream):
             return max(stream, key = lambda item : item["end"])["end"]
 
-        ax3.set_xlim(0, max([search_max_end_stream(test_value[i]) for i in test_value if len(test_value[i]) != 0]))
+        max_xlim = max([search_max_end_stream(test_value[i]) for i in test_value if len(test_value[i]) != 0])
+        ax1.set_xlim(0, max_xlim)
+        ax2.set_xlim(0, max_xlim)
+        ax3.set_xlim(0, max_xlim)
         ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
         addPlotToLayout(fig3, self.graphLayout)
 

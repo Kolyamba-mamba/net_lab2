@@ -46,13 +46,13 @@ def modellingSMO(input):
         # находим наиболее быстро обслуженную заявку и сравниваем с временем поступления новой
         for ch in channels:
             if channels[ch] != None:
-                min = True
-        if (min):
+                min = -2
+        if (min!=None):
             for ch in channels: 
-                if (channels[ch]!=None and channels[ch]["end"]<timeNew and (min==True or channels[ch]["end"]<min)):
+                if (channels[ch]!=None and channels[ch]["end"]<timeNew and (min==-2 or channels[ch]["end"]<channels[min]["end"])):
                     min = ch
 
-        if (min!=None and min!=True): # обслужена очередная заявка
+        if (min!=None and min!=-2): # обслужена очередная заявка
             currentTime = channels[min]["end"] # переставляем время на время выполнения заявки
             statWorkflow[min].append(channels[min])
             statDone["x"].append(currentTime)   # добавляем точку на график
