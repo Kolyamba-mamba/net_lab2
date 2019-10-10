@@ -143,8 +143,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         test_value = { 0: [{"name":'t1', "got": 0, "start":0, "end": 7}, {"name": 't3', "got": 5, "start": 7, "end":14}], 
                         1: [{"name":'t2', "got": 2, "start":2, "end": 11}] }
         drawQueue(ax3, test_value)
-        ax3.set_xlim(0, 10)
-        ax3.set_ylim(0, 10)
+
+        def search_max_end_stream(stream):
+            return max(stream, key = lambda item : item["end"])["end"]
+
+        ax3.set_xlim(0, max([search_max_end_stream(test_value[i]) for i in test_value]))
+        ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
         addPlotToLayout(fig3, self.graphLayout)
 
 
@@ -153,12 +157,13 @@ def drawQueue(plot, queue):
 
     space = 0
     for key_stream in queue:
-        space += 1
         for request in queue[key_stream]:
             # Rectangle((x,y),width,heigth)
             print((request["start"], key_stream+1), request["end"]-request["start"], 1)
             rc = Rectangle((request["start"], key_stream+1+space), request["end"]-request["start"], 1, edgecolor = 'blue', facecolor = 'aqua')
             plot.add_patch(rc)
+        
+        space += 1
 
 
 
