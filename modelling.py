@@ -4,7 +4,7 @@ from collections import deque
 def random(scale):
     return np.random.exponential(1/scale)
 
-def modellingSMO(input):
+def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_requests):
     currentTime = 0
     # в начале ни одной заявки нет
     statGot = {'x':[0], 'y':[0]}
@@ -14,7 +14,7 @@ def modellingSMO(input):
     curGot = 0
     curDone = 0
     curRefused = 0
-    timeNew = random(input["input_stream"]) # время, когда придёт новая заявка (можно заменить на 0)
+    timeNew = random(input_stream) # время, когда придёт новая заявка (можно заменить на 0)
 
     # очередь заявок
     # структура:
@@ -26,7 +26,7 @@ def modellingSMO(input):
     # { 0: {"name":'t1', "got": 0, "start":0, "end": 7},
     #   1: {"name":'t2', "got": 2, "start":2, "end": 11} }
     # вместо внутреннего словаря будет None, если канал простаивает
-    channels = {key: None for key in range(input["channels"])}
+    channels = {key: None for key in range(count_channels)}
 
     # статистика по каналам
     # структура statWorkflow:
@@ -38,10 +38,10 @@ def modellingSMO(input):
     # start — время начала её выполнения
     # end — время конца выполнения
     # ключи списка — номера каналов, -1 — канал отброшенных заявок
-    statWorkflow = {key:[] for key in range(-1, input["channels"])}
+    statWorkflow = {key:[] for key in range(-1, count_channels)}
     
 
-    while (curGot<input["count_requests"]):
+    while (curGot<count_requests):
         min = None
         # находим наиболее быстро обслуженную заявку и сравниваем с временем поступления новой
         for ch in channels:
@@ -60,7 +60,7 @@ def modellingSMO(input):
                 channels[min] = None
             else: # в ином случае выполняем следующую заявку
                 r = queue.popleft()
-                timeDone = currentTime + random(input["work_stream"])
+                timeDone = currentTime + random(work_stream)
                 channels[min] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": timeDone}
                 statQueue["x"].append(currentTime)   # добавляем точку на график
                 statQueue["y"].append(len(queue)+1)
@@ -68,7 +68,7 @@ def modellingSMO(input):
                 statQueue["y"].append(len(queue))
         else: # прибыла новая заявка
             currentTime = timeNew
-            timeNew = currentTime + random(input["input_stream"])
+            timeNew = currentTime + random(input_stream)
             statGot["x"].append(currentTime)   # добавляем точку на график
             statGot["y"].append(curGot)
             curGot+=1
@@ -80,10 +80,10 @@ def modellingSMO(input):
                     freeChannel = ch
                     break
             if (freeChannel != None): # если канал свободен, обслуживаем заявку сразу
-                timeDone = currentTime + random(input["work_stream"])
+                timeDone = currentTime + random(work_stream)
                 channels[ch] = {"name":'t'+str(curGot), "got": currentTime, "start":currentTime, "end": timeDone}            
             else: # иначе пытаемся добавить в очередь
-                if (len(queue)<input["queue_length"]):
+                if (len(queue)<queue_length):
                     queue.append({"name":'t'+str(curGot), "got": currentTime})
                     statQueue["x"].append(currentTime)   # добавляем точку на график
                     statQueue["y"].append(len(queue)-1)

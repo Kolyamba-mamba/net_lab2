@@ -35,7 +35,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def getDataFromUI(self):
         return {
-            "channels" : self.channelsSpinBox.value(),
+            "count_channels" : self.channelsSpinBox.value(),
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),
@@ -43,7 +43,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
                 
     def calculate_SLOT(self):
-        thingsToShow = modellingSMO(self.getDataFromUI())
+        thingsToShow = modellingSMO(**self.getDataFromUI())
         
         clearLayout(self.graphLayout)
         plt.close('all')
@@ -73,6 +73,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax1.set_xlim(0, max_xlim)
         ax2.set_xlim(0, max_xlim)
         ax3.set_xlim(0, max_xlim)
+
+        ax2.set_ylim(0)
         ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
         addPlotToLayout(fig3, self.graphLayout)
 
