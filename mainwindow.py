@@ -33,6 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def getDataFromUI(self):
         return {
+            "channels" : self.channelsSpinBox.value(),
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),

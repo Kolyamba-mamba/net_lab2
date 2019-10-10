@@ -21,14 +21,14 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <layout class="QFormLayout" name="formLayout">
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
              <string>Длина очереди</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="1" column="1">
            <widget class="QSpinBox" name="queueLengthSpinBox">
             <property name="maximum">
              <number>50</number>
@@ -38,14 +38,14 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="label_2">
             <property name="text">
              <string>Интенсивность входного потока</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QDoubleSpinBox" name="inputStreamSpinBox">
             <property name="decimals">
              <number>2</number>
@@ -61,14 +61,14 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>Интенсивность обслуживания</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="3" column="1">
            <widget class="QDoubleSpinBox" name="workStreamSpinBox">
             <property name="maximum">
              <double>1.000000000000000</double>
@@ -81,31 +81,48 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>Количество требований</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
              <string>Закон поступления</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="countRequestSpinBox">
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>Закон обслуживания</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="countRequestSpinBox">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Количество каналов</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="channelsSpinBox">
+            <property name="maximum">
+             <number>50</number>
+            </property>
             <property name="value">
-             <number>10</number>
+             <number>2</number>
             </property>
            </widget>
           </item>
@@ -156,7 +173,7 @@
      <x>0</x>
      <y>0</y>
      <width>958</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
