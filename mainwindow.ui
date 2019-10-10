@@ -50,6 +50,9 @@
             <property name="decimals">
              <number>2</number>
             </property>
+            <property name="minimum">
+             <double>0.010000000000000</double>
+            </property>
             <property name="maximum">
              <double>1.000000000000000</double>
             </property>
@@ -70,6 +73,9 @@
           </item>
           <item row="3" column="1">
            <widget class="QDoubleSpinBox" name="workStreamSpinBox">
+            <property name="minimum">
+             <double>0.010000000000000</double>
+            </property>
             <property name="maximum">
              <double>1.000000000000000</double>
             </property>
@@ -97,6 +103,12 @@
           </item>
           <item row="4" column="1">
            <widget class="QSpinBox" name="countRequestSpinBox">
+            <property name="minimum">
+             <number>5</number>
+            </property>
+            <property name="maximum">
+             <number>99999</number>
+            </property>
             <property name="value">
              <number>10</number>
             </property>
@@ -119,7 +131,7 @@
           <item row="0" column="1">
            <widget class="QSpinBox" name="channelsSpinBox">
             <property name="maximum">
-             <number>50</number>
+             <number>10</number>
             </property>
             <property name="value">
              <number>2</number>

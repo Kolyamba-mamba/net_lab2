@@ -67,11 +67,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax3 = fig3.add_subplot(111)
 
         test_value = thingsToShow[4]
-        #print(test_value)
         drawQueue(ax3, test_value)
 
         def search_max_end_stream(stream):
-            #print(stream)
             return max(stream, key = lambda item : item["end"])["end"]
 
         ax3.set_xlim(0, max([search_max_end_stream(test_value[i]) for i in test_value if len(test_value[i]) != 0]))
