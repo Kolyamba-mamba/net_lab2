@@ -50,9 +50,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # рисуем новые
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
-        ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green')
-        ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red')
+        ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow', label="полученные")
+        ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green',  label="отработанные")
+        ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red',    label="отклоненные")
+        ax1.legend()
         addPlotToLayout(fig1, self.graphLayout)
 
         fig2 = plt.figure()
@@ -75,6 +76,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax2.set_xlim(0, max_xlim)
         ax3.set_xlim(0, max_xlim)
 
+        ax1.set_ylim(0)
         ax2.set_ylim(0)
         ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
 
