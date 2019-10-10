@@ -44,10 +44,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
     def calculate_SLOT(self):
         thingsToShow = modellingSMO(**self.getDataFromUI())
-        
+        # удаляем отрисованные графики
         clearLayout(self.graphLayout)
         plt.close('all')
-
+        # рисуем новые
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
         ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
@@ -65,7 +65,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         test_value = thingsToShow[4]
         drawQueue(ax3, test_value)
-
+        addPlotToLayout(fig3, self.graphLayout)
+        # установка ограничений осей
         def search_max_end_stream(stream):
             return max(stream, key = lambda item : item["end"])["end"]
 
@@ -76,7 +77,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         ax2.set_ylim(0)
         ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
-        addPlotToLayout(fig3, self.graphLayout)
 
 
 def drawQueue(plot, queue):
