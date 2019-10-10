@@ -134,7 +134,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax2.plot(thingsToShow[3]["x"],thingsToShow[3]["y"], color='red')
         addPlotToLayout(fig2, self.graphLayout)
 
+        fig3 = plt.figure()
+        ax3 = fig3.add_subplot(111)
+        
+        # TODO вызов функции
+        # drawQueue(ax3, thingsToShow)
 
+        test_value = { 0: [{"name":'t1', "got": 0, "start":0, "end": 7}, {"name": 't3', "got": 5, "start": 7, "end":14}], 
+                        1: [{"name":'t2', "got": 2, "start":2, "end": 11}] }
+        drawQueue(ax3, test_value)
+        ax3.set_xlim(0, 10)
+        ax3.set_ylim(0, 10)
+        addPlotToLayout(fig3, self.graphLayout)
+
+
+def drawQueue(plot, queue):
+    from pylab import Rectangle
+
+    space = 0
+    for key_stream in queue:
+        space += 1
+        for request in queue[key_stream]:
+            # Rectangle((x,y),width,heigth)
+            print((request["start"], key_stream+1), request["end"]-request["start"], 1)
+            rc = Rectangle((request["start"], key_stream+1+space), request["end"]-request["start"], 1, edgecolor = 'blue', facecolor = 'aqua')
+            plot.add_patch(rc)
 
 
 
