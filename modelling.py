@@ -45,14 +45,10 @@ def modellingSMO(input):
         min = None
         # находим наиболее быстро обслуженную заявку и сравниваем с временем поступления новой
         for ch in channels:
-            if channels[ch] != None:
-                min = -2
-        if (min!=None):
-            for ch in channels: 
-                if (channels[ch]!=None and channels[ch]["end"]<timeNew and (min==-2 or channels[ch]["end"]<channels[min]["end"])):
-                    min = ch
+            if channels[ch] != None and channels[ch]["end"]<timeNew and (min==None or channels[ch]["end"]<channels[min]["end"]):
+                min = ch
 
-        if (min!=None and min!=-2): # обслужена очередная заявка
+        if (min != None): # обслужена очередная заявка
             currentTime = channels[min]["end"] # переставляем время на время выполнения заявки
             statWorkflow[min].append(channels[min])
             statDone["x"].append(currentTime)   # добавляем точку на график
@@ -60,16 +56,16 @@ def modellingSMO(input):
             curDone+=1
             statDone["x"].append(currentTime)
             statDone["y"].append(curDone)
-            if (queue.__len__()==0): # если очередь пуста, то канал остаётся свободен
+            if (len(queue)==0): # если очередь пуста, то канал остаётся свободен
                 channels[min] = None
             else: # в ином случае выполняем следующую заявку
                 r = queue.popleft()
                 timeDone = currentTime + random(input["work_stream"])
                 channels[min] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": timeDone}
                 statQueue["x"].append(currentTime)   # добавляем точку на график
-                statQueue["y"].append(queue.__len__()+1)
+                statQueue["y"].append(len(queue)+1)
                 statQueue["x"].append(currentTime)
-                statQueue["y"].append(queue.__len__())
+                statQueue["y"].append(len(queue))
         else: # прибыла новая заявка
             currentTime = timeNew
             timeNew = currentTime + random(input["input_stream"])
@@ -87,12 +83,12 @@ def modellingSMO(input):
                 timeDone = currentTime + random(input["work_stream"])
                 channels[ch] = {"name":'t'+str(curGot), "got": currentTime, "start":currentTime, "end": timeDone}            
             else: # иначе пытаемся добавить в очередь
-                if (queue.__len__()<input["queue_length"]):
+                if (len(queue)<input["queue_length"]):
                     queue.append({"name":'t'+str(curGot), "got": currentTime})
                     statQueue["x"].append(currentTime)   # добавляем точку на график
-                    statQueue["y"].append(queue.__len__()-1)
+                    statQueue["y"].append(len(queue)-1)
                     statQueue["x"].append(currentTime)
-                    statQueue["y"].append(queue.__len__())
+                    statQueue["y"].append(len(queue))
                 else:
                     statWorkflow[-1].append({"name":'t'+str(curGot), "got":currentTime, "start":currentTime, "end":currentTime})
                     statRefused["x"].append(currentTime)   # добавляем точку на график
@@ -109,5 +105,5 @@ def modellingSMO(input):
     statRefused["x"].append(currentTime)   
     statRefused["y"].append(curRefused)
     statQueue["x"].append(currentTime)
-    statQueue["y"].append(queue.__len__())
+    statQueue["y"].append(len(queue))
     return [statGot, statDone, statRefused, statQueue, statWorkflow]
