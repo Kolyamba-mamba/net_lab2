@@ -1,8 +1,10 @@
 import numpy as np
 from collections import deque
 
+
 def random(scale):
     return np.random.exponential(1/scale)
+
 
 def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_requests):
     currentTime = 0
@@ -39,7 +41,6 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
     # end — время конца выполнения
     # ключи списка — номера каналов, -1 — канал отброшенных заявок
     statWorkflow = {key:[] for key in range(-1, count_channels)}
-    
 
     while (curGot<count_requests):
         min = None
