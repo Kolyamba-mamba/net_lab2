@@ -50,10 +50,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow')
-        ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green')
-        ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red')
+        handle1 = [ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow', label="puk"),
+            ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green', label="puk2"),
+            ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red', label="puk3")
+        ]
         addPlotToLayout(fig1, self.graphLayout)
+        fig1.legend(handle1, ["p1", "p2", "p3"], loc='upper left')
 
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
@@ -65,6 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         test_value = thingsToShow[4]
         drawQueue(ax3, test_value)
+        addPlotToLayout(fig3, self.graphLayout)
 
         def search_max_end_stream(stream):
             return max(stream, key = lambda item : item["end"])["end"]
@@ -73,8 +76,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax1.set_xlim(0, max_xlim)
         ax2.set_xlim(0, max_xlim)
         ax3.set_xlim(0, max_xlim)
+        ax2.set_ylim(0)
         ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
-        addPlotToLayout(fig3, self.graphLayout)
+
+        ax1.set_xlabel('время')
+        ax1.set_ylabel('заявки')
+        ax2.set_xlabel('время')
+        ax2.set_ylabel('очередь')
+        ax3.set_xlabel('время')
+        ax3.set_ylabel('')
+
 
 
 def drawQueue(plot, queue):

@@ -1,6 +1,12 @@
 import numpy as np
 from collections import deque
 
+def getNextRequest(discipline, queue):
+    if (discipline=="FIFO"):
+        return queue.popleft()
+    else:
+        return None
+
 def random(scale):
     return np.random.exponential(1/scale)
 
@@ -34,12 +40,14 @@ def modellingSMO(input):
     #   0: [{"name":'t1', "got": 0, "start":0, "end": 7}, {"name": 't3', "got": 5, "start": 7, "end":14}],
     #   1: [{"name":'t2', "got": 2, "start":2, "end": 11}]  }
     # name — название заявки
-    # got — время её получения
+    # got — время её получения (пока не используется)
     # start — время начала её выполнения
     # end — время конца выполнения
-    # ключи списка — номера каналов, -1 — канал отброшенных заявок
-    statWorkflow = {key:[] for key in range(-1, input["channels"])}
-    
+    # ключи списка — номера каналов
+    ### -1 канал был убран!
+    statWorkflow = {key:[] for key in range(input["channels"])}
+    # времена получения заявок
+    statGotTime = []
 
     while (curGot<input["count_requests"]):
         min = None
@@ -63,7 +71,7 @@ def modellingSMO(input):
             if (queue.__len__()==0): # если очередь пуста, то канал остаётся свободен
                 channels[min] = None
             else: # в ином случае выполняем следующую заявку
-                r = queue.popleft()
+                r = getNextRequest("FIFO",queue)
                 timeDone = currentTime + random(input["work_stream"])
                 channels[min] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": timeDone}
                 statQueue["x"].append(currentTime)   # добавляем точку на график
@@ -78,6 +86,7 @@ def modellingSMO(input):
             curGot+=1
             statGot["x"].append(currentTime)
             statGot["y"].append(curGot)
+            statGotTime.append({"name":'t'+str(curGot), "got":currentTime})
             freeChannel = None
             for ch in channels:
                 if (channels[ch]==None):
@@ -94,7 +103,6 @@ def modellingSMO(input):
                     statQueue["x"].append(currentTime)
                     statQueue["y"].append(queue.__len__())
                 else:
-                    statWorkflow[-1].append({"name":'t'+str(curGot), "got":currentTime, "start":currentTime, "end":currentTime})
                     statRefused["x"].append(currentTime)   # добавляем точку на график
                     statRefused["y"].append(curRefused)
                     curRefused += 1
