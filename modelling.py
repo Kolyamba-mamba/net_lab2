@@ -50,6 +50,9 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
     ### -1 канал был убран!
     statWorkflow = {key:[] for key in range(count_channels)}
     # времена получения заявок
+    # структура:
+    # [{"name":'t4', "got": 6},
+    # {"name":'t6', "got": 42}]
     statGotTime = []
 
 
