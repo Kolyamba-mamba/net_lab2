@@ -50,22 +50,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # рисуем новые
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='blue', label="Всего")
-        ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green',  label="Отработанные")
-        ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red',    label="Отклоненные")
+        ax1.plot(thingsToShow["statGot"]["x"],thingsToShow["statGot"]["y"], color='blue', label="Всего")
+        ax1.plot(thingsToShow["statDone"]["x"],thingsToShow["statDone"]["y"], color='green',  label="Отработанные")
+        ax1.plot(thingsToShow["statRefused"]["x"],thingsToShow["statRefused"]["y"], color='red',    label="Отклоненные")
         ax1.legend(loc='upper left', ncol=3)
         addPlotToLayout(fig1, self.graphLayout)
         #fig1.legend(handle1, ["p1", "p2", "p3"], loc='upper left')
 
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
-        ax2.plot(thingsToShow[3]["x"],thingsToShow[3]["y"], color='red')
+        ax2.plot(thingsToShow["statQueue"]["x"],thingsToShow["statQueue"]["y"], color='red')
         addPlotToLayout(fig2, self.graphLayout)
 
         fig3 = plt.figure()
         ax3 = fig3.add_subplot(111)
 
-        test_value = thingsToShow[4]
+        test_value = thingsToShow["statWorkflow"]
         drawQueue(ax3, test_value)
         addPlotToLayout(fig3, self.graphLayout)
         # установка ограничений осей
