@@ -116,4 +116,4 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
     statRefused["y"].append(curRefused)
     statQueue["x"].append(currentTime)
     statQueue["y"].append(len(queue))
-    return [statGot, statDone, statRefused, statQueue, statWorkflow]
+    return [statGot, statDone, statRefused, statQueue, statWorkflow, statGotTime]
