@@ -39,7 +39,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),
-            "work_stream": self.workStreamSpinBox.value()
+            "work_stream": self.workStreamSpinBox.value(),
+            "discipline": self.comboBox.currentText()
         }
                 
     def calculate_SLOT(self):
