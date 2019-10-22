@@ -70,6 +70,9 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
                 channels[min] = None
             else: # в ином случае выполняем следующую заявку
                 r = getNextRequest("FIFO",queue)
+                if (r==None):
+                    print("Неправильная дисциплина")
+                    return
                 timeDone = currentTime + random(work_stream)
                 channels[min] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": timeDone}
                 statQueue["x"].append(currentTime)   # добавляем точку на график
