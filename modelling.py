@@ -12,6 +12,12 @@ def getNextRequest(discipline:str, queue:deque):
 def random(scale):
     return np.random.exponential(1/scale)
 
+def addPoint(dict, time, oldvalue, value):
+    dict["x"].append(time)
+    dict["y"].append(oldvalue)
+    if (oldvalue!=value):
+        dict["x"].append(time)
+        dict["y"].append(value)
 
 def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_requests):
     currentTime = 0
@@ -66,11 +72,8 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
         if (min != None): # обслужена очередная заявка
             currentTime = channels[min]["end"] # переставляем время на время выполнения заявки
             statWorkflow[min].append(channels[min])
-            statDone["x"].append(currentTime)   # добавляем точку на график
-            statDone["y"].append(curDone)
             curDone+=1
-            statDone["x"].append(currentTime)
-            statDone["y"].append(curDone)
+            addPoint(statDone, currentTime, curDone-1 ,curDone)
             if (len(queue)==0): # если очередь пуста, то канал остаётся свободен
                 channels[min] = None
             else: # в ином случае выполняем следующую заявку
@@ -80,18 +83,12 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
                     return
                 timeDone = currentTime + random(work_stream)
                 channels[min] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": timeDone}
-                statQueue["x"].append(currentTime)   # добавляем точку на график
-                statQueue["y"].append(len(queue)+1)
-                statQueue["x"].append(currentTime)
-                statQueue["y"].append(len(queue))
+                addPoint(statQueue, currentTime, len(queue)+1, len(queue))
         else: # прибыла новая заявка
             currentTime = timeNew
             timeNew = currentTime + random(input_stream)
-            statGot["x"].append(currentTime)   # добавляем точку на график
-            statGot["y"].append(curGot)
             curGot+=1
-            statGot["x"].append(currentTime)
-            statGot["y"].append(curGot)
+            addPoint(statGot, currentTime, curGot-1, curGot)
             statGotTime.append({"name":'t'+str(curGot), "got":currentTime})
             freeChannel = None
             for ch in channels:
@@ -104,26 +101,17 @@ def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_
             else: # иначе пытаемся добавить в очередь
                 if (len(queue)<queue_length):
                     queue.append({"name":'t'+str(curGot), "got": currentTime})
-                    statQueue["x"].append(currentTime)   # добавляем точку на график
-                    statQueue["y"].append(len(queue)-1)
-                    statQueue["x"].append(currentTime)
-                    statQueue["y"].append(len(queue))
+                    addPoint(statQueue, currentTime, len(queue)-1, len(queue))
                 else:
-                    statRefused["x"].append(currentTime)   # добавляем точку на график
-                    statRefused["y"].append(curRefused)
                     curRefused += 1
-                    statRefused["x"].append(currentTime)
-                    statRefused["y"].append(curRefused)
+                    addPoint(statRefused, currentTime, curRefused-1, curRefused)
 
     # добавляем точки на краю
-    statGot["x"].append(currentTime)
-    statGot["y"].append(curGot)
-    statDone["x"].append(currentTime)
-    statDone["y"].append(curDone)
-    statRefused["x"].append(currentTime)   
-    statRefused["y"].append(curRefused)
-    statQueue["x"].append(currentTime)
-    statQueue["y"].append(len(queue))
+    addPoint(statGot, currentTime, curGot, curGot)
+    addPoint(statDone, currentTime, curDone, curDone)
+    addPoint(statRefused, currentTime, curRefused, curRefused)
+    addPoint(statQueue, currentTime, len(queue), len(queue))
+
     return {"statGot":statGot,
     "statDone":statDone,
     "statRefused":statRefused,
