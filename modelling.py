@@ -1,9 +1,11 @@
 import numpy as np
 from collections import deque
 
-def getNextRequest(discipline, queue):
+def getNextRequest(discipline:str, queue:deque):
     if (discipline=="FIFO"):
         return queue.popleft()
+    elif (discipline=="LIFO"):
+        return queue.popright()
     else:
         return None
 
