@@ -35,7 +35,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def getDataFromUI(self):
         return {
-            "channels" : self.channelsSpinBox.value(),
+            "count_channels" : self.channelsSpinBox.value(),
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),
@@ -43,19 +43,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
                 
     def calculate_SLOT(self):
-        thingsToShow = modellingSMO(self.getDataFromUI())
-        
+        thingsToShow = modellingSMO(**self.getDataFromUI())
+        # удаляем отрисованные графики
         clearLayout(self.graphLayout)
         plt.close('all')
-
+        # рисуем новые
         fig1 = plt.figure()
         ax1 = fig1.add_subplot(111)
-        handle1 = [ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='yellow', label="puk"),
-            ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green', label="puk2"),
-            ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red', label="puk3")
-        ]
+        ax1.plot(thingsToShow[0]["x"],thingsToShow[0]["y"], color='blue', label="Всего")
+        ax1.plot(thingsToShow[1]["x"],thingsToShow[1]["y"], color='green',  label="Отработанные")
+        ax1.plot(thingsToShow[2]["x"],thingsToShow[2]["y"], color='red',    label="Отклоненные")
+        ax1.legend(loc='upper left', ncol=3)
         addPlotToLayout(fig1, self.graphLayout)
-        fig1.legend(handle1, ["p1", "p2", "p3"], loc='upper left')
+        #fig1.legend(handle1, ["p1", "p2", "p3"], loc='upper left')
 
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         test_value = thingsToShow[4]
         drawQueue(ax3, test_value)
         addPlotToLayout(fig3, self.graphLayout)
-
+        # установка ограничений осей
         def search_max_end_stream(stream):
             return max(stream, key = lambda item : item["end"])["end"]
 
@@ -76,16 +76,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax1.set_xlim(0, max_xlim)
         ax2.set_xlim(0, max_xlim)
         ax3.set_xlim(0, max_xlim)
+
+        ax1.set_ylim(0)
         ax2.set_ylim(0)
         ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
-
-        ax1.set_xlabel('время')
-        ax1.set_ylabel('заявки')
-        ax2.set_xlabel('время')
-        ax2.set_ylabel('очередь')
-        ax3.set_xlabel('время')
-        ax3.set_ylabel('')
-
 
 
 def drawQueue(plot, queue):
