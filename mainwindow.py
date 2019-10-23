@@ -85,16 +85,48 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 def drawQueue(plot, queue):
     from pylab import Rectangle
-
+    # import matplotlib.lines as mlines
     space = 0
+    # for key_stream in queue:
+    #     for request in queue[key_stream]:
+    #         # Rectangle((x,y),width,heigth)
+    #         #print((request["start"], key_stream+1), request["end"]-request["start"], 1)
+    #         x, y = (request["start"], key_stream+1+space)
+    #         width, heigth = request["end"]-request["start"], 1
+    #         # first variant
+    #         rc = Rectangle((x,y),width,heigth, edgecolor = 'blue', facecolor = 'aqua')
+    #         plot.add_patch(rc)
+    #         # second variant
+    #         # l = mlines.Line2D([x,x+width], [y,y])
+    #         # plot.add_line(l)
+    #         # l = mlines.Line2D([x+width,x+width], [y,y+heigth])
+    #         # plot.add_line(l)
+    #         # l = mlines.Line2D([x,x+width], [y+heigth,y+heigth])
+    #         # plot.add_line(l)
+    #         # l = mlines.Line2D([x,x], [y,y+heigth])
+    #         # plot.add_line(l)
+    #         # third variant
+    #         # plot.plot([x, x+width, x+width, x, x], [y, y, y+heigth,y+heigth, y])
+        
+    #     space += 1
+
+    # four variant
+    xarr, yarr, xnextarr, yonearr = [],[],[],[]
     for key_stream in queue:
         for request in queue[key_stream]:
-            # Rectangle((x,y),width,heigth)
-            #print((request["start"], key_stream+1), request["end"]-request["start"], 1)
-            rc = Rectangle((request["start"], key_stream+1+space), request["end"]-request["start"], 1, edgecolor = 'blue', facecolor = 'aqua')
-            plot.add_patch(rc)
+            x, y = (request["start"], key_stream+1+space)
+            
+            xarr.append(x)
+            yarr.append(y)
+            xnextarr.append(request["end"])
+            yonearr.append(y+1)
         
         space += 1
+
+    plot.vlines(xarr, yarr, yonearr)
+    plot.vlines(xnextarr, yarr, yonearr)
+    plot.hlines(yarr, xarr, xnextarr)
+    plot.hlines(yonearr, xarr, xnextarr)
 
 
 
