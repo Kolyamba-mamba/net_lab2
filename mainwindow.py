@@ -55,16 +55,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax1.plot(thingsToShow["statDone"]["x"],thingsToShow["statDone"]["y"], color='green',  label="Отработанные")
         ax1.plot(thingsToShow["statRefused"]["x"],thingsToShow["statRefused"]["y"], color='red',    label="Отклоненные")
         ax1.legend(loc='upper left', ncol=3)
+        ax1.set_ylabel('Количество заявок')
+        ax1.set_xlabel('Время')
         addPlotToLayout(fig1, self.graphLayout)
         #fig1.legend(handle1, ["p1", "p2", "p3"], loc='upper left')
 
         fig2 = plt.figure()
         ax2 = fig2.add_subplot(111)
-        ax2.plot(thingsToShow["statQueue"]["x"],thingsToShow["statQueue"]["y"], color='red')
+        ax2.plot(thingsToShow["statQueue"]["x"],thingsToShow["statQueue"]["y"], color='red', label='Заявок в очереди')
+        ax2.legend(loc='upper left', ncol=1)
+        ax2.set_ylabel('Очередь')
+        ax2.set_xlabel('Время')
         addPlotToLayout(fig2, self.graphLayout)
 
         fig3 = plt.figure()
         ax3 = fig3.add_subplot(111)
+        ax3.set_ylabel('Каналы')
+        ax3.set_xlabel('Время')
 
         test_value = thingsToShow["statWorkflow"]
         drawQueue(ax3, test_value)
