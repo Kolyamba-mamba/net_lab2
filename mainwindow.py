@@ -73,21 +73,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax3.set_ylabel('Каналы')
         ax3.set_xlabel('Время')
 
-        test_value = thingsToShow["statWorkflow"]
-        drawQueue(ax3, test_value)
+        statWorkflow = thingsToShow["statWorkflow"]
+        drawQueue(ax3, statWorkflow)
         addPlotToLayout(fig3, self.graphLayout)
         # установка ограничений осей
         def search_max_end_stream(stream):
             return max(stream, key = lambda item : item["end"])["end"]
 
-        max_xlim = max([search_max_end_stream(test_value[i]) for i in test_value if len(test_value[i]) != 0])
+        max_xlim = max([search_max_end_stream(statWorkflow[i]) for i in statWorkflow if len(statWorkflow[i]) != 0])
         ax1.set_xlim(0, max_xlim)
         ax2.set_xlim(0, max_xlim)
         ax3.set_xlim(0, max_xlim)
 
         ax1.set_ylim(0)
         ax2.set_ylim(0)
-        ax3.set_ylim(0, (max(test_value.keys())+1)*2 + 2)
+        ax3.set_ylim(0, (max(statWorkflow.keys())+1)*2 + 2)
 
 
 def drawQueue(plot, queue):
