@@ -44,7 +44,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
                 
     def calculate_SLOT(self):
-        thingsToShow = modellingSMO(**self.getDataFromUI())
+        dataFromUI = self.getDataFromUI()
+        thingsToShow = modellingSMO(**dataFromUI)
         # удаляем отрисованные графики
         clearLayout(self.graphLayout)
         plt.close('all')
@@ -86,7 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ax3.set_xlim(0, max_xlim)
 
         ax1.set_ylim(0)
-        ax2.set_ylim(0)
+        ax2.set_ylim(0, dataFromUI["queue_length"]+1)
         ax3.set_ylim(0, (max(statWorkflow.keys())+1)*2 + 2)
 
 
