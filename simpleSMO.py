@@ -5,8 +5,14 @@ def getNextRequest(discipline:str, queue:deque):
     if (discipline=="FIFO"):
         return queue.popleft()
     elif (discipline=="LIFO"):
-        return queue.popright()
+        return queue.pop()
+    elif (discipline=="RAND"):
+        num = np.random.randint(0, queue.count())
+        res = queue[num]
+        queue.remove(res)
+        return res
     else:
+        print("неправильная дисциплина для getNextRequest")
         return None
 
 def random(scale):

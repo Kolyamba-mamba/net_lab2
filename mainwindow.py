@@ -12,6 +12,7 @@ import matplotlib.pylab as plt
 import numpy as np
 
 from simpleSMO import simpleSMO
+from RR import RR
 
 def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -44,8 +45,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
     def calculate_SLOT(self):
         dataFromUI = self.getDataFromUI()
-        if (dataFromUI["discipline"] in ["FIFO", "LIFO"])
+        if (dataFromUI["discipline"] in ["FIFO", "LIFO"]):
             thingsToShow = simpleSMO(**dataFromUI)
+        elif (dataFromUI["discipline"] == "RR"):
+            thingsToShow = RR(**dataFromUI)
         else:
             print("неизвестная дисциплина")
             dataFromUI["discipline"] = "FIFO"

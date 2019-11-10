@@ -145,6 +145,21 @@
               <string>FIFO</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>LIFO</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>RAND</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>RR</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>

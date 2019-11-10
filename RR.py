@@ -1,0 +1,116 @@
+import numpy as np
+from collections import deque
+
+def getNextRequest(queue:deque):
+    if queue.count()>0:
+        return queue.popleft()
+    else:
+        return None
+
+def random(scale):
+    return np.random.exponential(1/scale)
+
+def addPoint(dict, time, oldvalue, value):
+    dict["x"].append(time)
+    dict["y"].append(oldvalue)
+    if (oldvalue!=value):
+        dict["x"].append(time)
+        dict["y"].append(value)
+
+def RR(input_stream, count_channels, work_stream, queue_length, count_requests, discipline):
+    currentTime = 0
+    # в начале ни одной заявки нет
+    statGot = {'x':[0], 'y':[0]}
+    statDone = {'x':[0], 'y':[0]}
+    statRefused = {'x':[0], 'y':[0]}
+    statQueue = {'x':[0], 'y':[0]}
+    curGot = 0
+    curDone = 0
+    curRefused = 0
+    timeNew = random(input_stream) # время, когда придёт новая заявка (можно заменить на 0)
+
+    timeQuant = 10 # TODO: принимать параметром
+
+    # очередь заявок
+    # структура:
+    # q(["name":'t1', "got":0, "left":10],["name":'t2', "got":2, "left":7])
+    queue = deque() #append, popleft, count
+
+    # текущее состояние каналов
+    # структура channels:
+    # { 0: {"name":'t1', "got": 0, "start":0, "end": 7, "left":10},
+    #   1: {"name":'t2', "got": 2, "start":2, "end": 11, "left":7} }
+    # вместо внутреннего словаря будет None, если канал простаивает
+    channels = {key: None for key in range(count_channels)}
+
+    # статистика по каналам
+    # структура statWorkflow:
+    #{  0: [{"name":'t1', "got": 0, "start":0, "end": 7, "left":10}, {"name": 't3', "got": 5, "start": 7, "end":14, "left":10}],
+    #   1: [{"name":'t2', "got": 2, "start":2, "end": 11, "left":10}]  }
+    # name — название заявки
+    # got — время её получения (пока не используется)
+    # start — время начала её выполнения
+    # end — время конца выполнения
+    # left — оставшееся время для обслуживания заявки
+    # ключи списка — номера каналов
+    statWorkflow = {key:[] for key in range(count_channels)}
+    # времена получения заявок
+    # структура:
+    # [{"name":'t4', "got": 6},
+    # {"name":'t6', "got": 42}]
+    statGotTime = []
+
+
+    while (curGot<count_requests):
+        if (curTime + timeQuant >= timeNew): # истёк очередной квант времени
+            currentTime += timeQuant
+            prevLen = len(queue)
+            reqRemoved = False
+            for ch in channels:
+                if (channels[ch] != None):
+                    if (channels[ch]["end"]<=currentTime):
+                        channels[ch]["end"] = channels[ch]["start"]+channels[ch]["left"]
+                        statWorkflow[ch].append(channels[ch])
+                        curDone+=1
+                        reqRemoved = True
+                    else:
+                        statWorkflow[ch].append(channels[ch])
+                        queue.append({"name":channels[ch]["name"], "got": channels[ch]["got"], "left":channels[ch]["left"]-timeQuant})
+            
+            for ch in channels:
+                r = getNextRequest(queue)
+                if r!=None:
+                    channels[ch] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": currentTime+min(timeQuant,r["left"]), "left":r["left"]}
+                else:
+                    channels[ch] = None
+            if (reqRemoved):
+                addPoint(statQueue, currentTime, prevLen, len(queue))
+            if (len(queue)==0): # если очередь пуста, то канал остаётся свободен
+                channels[min] = None
+
+        else: # прибыла новая заявка
+            currentTime = timeNew
+            timeNew = currentTime + random(input_stream)
+            curGot+=1
+            addPoint(statGot, currentTime, curGot-1, curGot)
+            statGotTime.append({"name":'t'+str(curGot), "got":currentTime, "left":random(work_stream)})         
+            # пытаемся добавить в очередь
+            if (len(queue)<queue_length):
+                queue.append({"name":'t'+str(curGot), "got": currentTime})
+                addPoint(statQueue, currentTime, len(queue)-1, len(queue))
+            else:
+                curRefused += 1
+                addPoint(statRefused, currentTime, curRefused-1, curRefused)
+
+    # добавляем точки на краю
+    addPoint(statGot, currentTime, curGot, curGot)
+    addPoint(statDone, currentTime, curDone, curDone)
+    addPoint(statRefused, currentTime, curRefused, curRefused)
+    addPoint(statQueue, currentTime, len(queue), len(queue))
+
+    return {"statGot":statGot,
+    "statDone":statDone,
+    "statRefused":statRefused,
+    "statQueue":statQueue,
+    "statWorkflow":statWorkflow,
+    "statGotTime":statGotTime}
