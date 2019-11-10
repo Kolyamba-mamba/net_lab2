@@ -11,8 +11,7 @@ matplotlib.use('QT5Agg')
 import matplotlib.pylab as plt
 import numpy as np
 
-from modelling import modellingSMO
-
+from simpleSMO import simpleSMO
 
 def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -45,7 +44,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
     def calculate_SLOT(self):
         dataFromUI = self.getDataFromUI()
-        thingsToShow = modellingSMO(**dataFromUI)
+        if (dataFromUI["discipline"] in ["FIFO", "LIFO"])
+            thingsToShow = simpleSMO(**dataFromUI)
+        else:
+            print("неизвестная дисциплина")
+            dataFromUI["discipline"] = "FIFO"
+            thingsToShow = simpleSMO(**dataFromUI)
+
         # удаляем отрисованные графики
         clearLayout(self.graphLayout)
         plt.close('all')

@@ -19,7 +19,7 @@ def addPoint(dict, time, oldvalue, value):
         dict["x"].append(time)
         dict["y"].append(value)
 
-def modellingSMO(input_stream, count_channels, work_stream, queue_length, count_requests, discipline):
+def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_requests, discipline):
     currentTime = 0
     # в начале ни одной заявки нет
     statGot = {'x':[0], 'y':[0]}
