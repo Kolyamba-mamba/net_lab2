@@ -1,21 +1,12 @@
 import numpy as np
 from collections import deque
+from modeling.helper import *
 
 def getNextRequest(queue:deque):
     if len(queue)>0:
         return queue.popleft()
     else:
         return None
-
-def random(scale):
-    return np.random.exponential(1/scale)
-
-def addPoint(dict, time, oldvalue, value):
-    dict["x"].append(time)
-    dict["y"].append(oldvalue)
-    if (oldvalue!=value):
-        dict["x"].append(time)
-        dict["y"].append(value)
 
 def RR(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, time_quant, buffer_size, **kwargs):
     currentTime = 0

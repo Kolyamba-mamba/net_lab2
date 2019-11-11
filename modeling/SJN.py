@@ -1,22 +1,31 @@
-import numpy as np
-from collections import deque
+from heapq import *
 from modeling.helper import *
 
-def getNextRequest(discipline:str, queue:deque):
-    if (discipline=="FIFO"):
-        return queue.popleft()
-    elif (discipline=="LIFO"):
-        return queue.pop()
-    elif (discipline=="RAND"):
-        num = np.random.randint(0, queue.count())
-        res = queue[num]
-        queue.remove(res)
-        return res
-    else:
-        print("неправильная дисциплина для getNextRequest")
-        return None
 
-def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, **kwargs):
+def getNextRequest(container: list):
+    res = heappop(container)
+    return {
+        "name": res.name,
+        "got": res.got,
+        "work": res.work
+    }
+    
+
+class Point():
+    def __init__(self, name, got, work):
+        self.name = name
+        self.got = got
+        self.work = work
+    
+    def __it__(self, other):
+        return self.work < other.work
+
+    def __gt__(self, other):
+        return self.work > other.work
+
+
+
+def SJN(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, **kwargs):
     currentTime = 0
     # в начале ни одной заявки нет
     statGot = {'x':[0], 'y':[0]}
@@ -31,7 +40,7 @@ def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_req
     # очередь заявок
     # структура:
     # q(["name":'t1', "got":0],["name":'t2', "got":2])
-    queue = deque() #append, popleft, count
+    queue = []
 
     # текущее состояние каналов
     # структура channels:
@@ -74,11 +83,8 @@ def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_req
             if (len(queue)==0): # если очередь пуста, то канал остаётся свободен
                 channels[min] = None
             else: # в ином случае выполняем следующую заявку
-                r = getNextRequest("FIFO",queue)
-                if (r==None):
-                    print("Неправильная дисциплина")
-                    return
-                timeDone = currentTime + random(work_stream)
+                r = getNextRequest(queue)
+                timeDone = currentTime + r["work"]
                 channels[min] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": timeDone}
                 addPoint(statQueue, currentTime, len(queue)+1, len(queue))
         else: # прибыла новая заявка
@@ -95,11 +101,12 @@ def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_req
             if (freeChannel != None): # если канал свободен, обслуживаем заявку сразу
                 timeDone = currentTime + random(work_stream)
                 channels[ch] = {"name":'t'+str(curGot), "got": currentTime, "start":currentTime, "end": timeDone}            
-            else: # иначе пытаемся добавить в очередь
+            else:
                 if (len(queue)<queue_length):
-                    queue.append({"name":'t'+str(curGot), "got": currentTime})
+                    heappush(queue, Point('t'+str(curGot), currentTime, random(work_stream)))
                     addPoint(statQueue, currentTime, len(queue)-1, len(queue))
                 else:
+                    queue.pop()
                     curRefused += 1
                     addPoint(statRefused, currentTime, curRefused-1, curRefused)
 
