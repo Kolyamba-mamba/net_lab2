@@ -66,14 +66,18 @@ def RR(input_stream, count_channels, work_stream, queue_length, count_requests, 
         if (currentTime + time_quant <= timeNew): # истёк очередной квант времени
             queueChanged = False
             prevLen = len(queue)
+            done = []
             for ch in channels:
                 if (channels[ch] != None):
                     if (channels[ch]["left"]<=time_quant):
-                        curDone+=1
-                        addPoint(statDone, currentTime+channels[ch]["left"], curDone-1 ,curDone)
+                        done.append(channels[ch])
                     else:
                         channels[ch]["left"]-=time_quant
                         buffer.append(channels[ch])
+            done.sort(key=lambda x:x["left"])
+            for e in done:
+                curDone+=1  
+                addPoint(statDone, currentTime+e["left"], curDone-1 ,curDone)
             currentTime += time_quant
             for ch in channels:
                 if (len(buffer)!=0):
