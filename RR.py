@@ -17,7 +17,15 @@ def addPoint(dict, time, oldvalue, value):
         dict["x"].append(time)
         dict["y"].append(value)
 
-def RR(input_stream, count_channels, work_stream, queue_length, count_requests, discipline):
+def RR(dataFromUI):
+    input_stream = dataFromUI["input_stream"]
+    count_channels = dataFromUI["count_channels"]
+    work_stream = dataFromUI["work_stream"]
+    queue_length = dataFromUI["queue_length"]
+    count_requests = dataFromUI["count_requests"]
+    discipline = dataFromUI["discipline"]
+    time_quant = dataFromUI["time_quant"]
+    buffer_size = dataFromUI["buffer_size"]
     currentTime = 0
     # в начале ни одной заявки нет
     statGot = {'x':[0], 'y':[0]}
@@ -29,7 +37,8 @@ def RR(input_stream, count_channels, work_stream, queue_length, count_requests, 
     curRefused = 0
     timeNew = random(input_stream) # время, когда придёт новая заявка (можно заменить на 0)
 
-    timeQuant = 1 # TODO: принимать параметром
+    #time_quant = 1
+    #bufferSize = 4
 
     # очередь заявок
     # структура:
@@ -63,23 +72,23 @@ def RR(input_stream, count_channels, work_stream, queue_length, count_requests, 
     lastReq = 0
 
     while (curGot<count_requests):
-        if (currentTime + timeQuant <= timeNew): # истёк очередной квант времени
+        if (currentTime + time_quant <= timeNew): # истёк очередной квант времени
             
             prevLen = len(queue)
             for ch in channels:
                 if (channels[ch] != None):
-                    if (channels[ch]["left"]<=timeQuant):
+                    if (channels[ch]["left"]<=time_quant):
                         statWorkflow[ch].append(channels[ch])
                         curDone+=1
                         addPoint(statDone, currentTime+channels[ch]["left"], curDone-1 ,curDone)
                     else:
                         statWorkflow[ch].append(channels[ch])
-                        queue.append({"name":channels[ch]["name"], "got": channels[ch]["got"], "left":channels[ch]["left"]-timeQuant})
-            currentTime += timeQuant
+                        queue.append({"name":channels[ch]["name"], "got": channels[ch]["got"], "left":channels[ch]["left"]-time_quant})
+            currentTime += time_quant
             for ch in channels:
                 if (len(queue)!=0):
                     r = getNextRequest(queue)
-                    channels[ch] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": currentTime+min(timeQuant, r["left"]), "left":r["left"]}
+                    channels[ch] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": currentTime+min(time_quant, r["left"]), "left":r["left"]}
                 else:
                     channels[ch] = None
             

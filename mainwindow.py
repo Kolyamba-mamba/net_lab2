@@ -32,6 +32,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.CalcBtn.clicked.connect(self.calculate_SLOT)
+        self.comboBox.currentIndexChanged.connect(self.stackedWidget.setCurrentIndex)
+        self.comboBox.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(0)
+
 
     def getDataFromUI(self):
         return {
@@ -40,19 +44,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),
             "work_stream": self.workStreamSpinBox.value(),
-            "discipline": self.comboBox.currentText()
+            "discipline": self.comboBox.currentText(),
+            "buffer_size": self.bufferSpinBox.value(),
+            "time_quant": self.quantSpinBox.value()
         }
                 
     def calculate_SLOT(self):
         dataFromUI = self.getDataFromUI()
         if (dataFromUI["discipline"] in ["FIFO", "LIFO"]):
-            thingsToShow = simpleSMO(**dataFromUI)
+            thingsToShow = simpleSMO(dataFromUI)
         elif (dataFromUI["discipline"] == "RR"):
-            thingsToShow = RR(**dataFromUI)
+            thingsToShow = RR(dataFromUI)
         else:
             print("неизвестная дисциплина")
             dataFromUI["discipline"] = "FIFO"
-            thingsToShow = simpleSMO(**dataFromUI)
+            thingsToShow = simpleSMO(dataFromUI)
 
         # удаляем отрисованные графики
         clearLayout(self.graphLayout)
