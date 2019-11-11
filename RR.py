@@ -37,13 +37,12 @@ def RR(dataFromUI):
     curRefused = 0
     timeNew = random(input_stream) # время, когда придёт новая заявка (можно заменить на 0)
 
-    #time_quant = 1
-    #bufferSize = 4
-
     # очередь заявок
     # структура:
     # q(["name":'t1', "got":0, "left":10],["name":'t2', "got":2, "left":7])
     queue = deque() #append, popleft, count
+
+    buffer = deque()
 
     # текущее состояние каналов
     # структура channels:
@@ -73,35 +72,48 @@ def RR(dataFromUI):
 
     while (curGot<count_requests):
         if (currentTime + time_quant <= timeNew): # истёк очередной квант времени
-            
+            queueChanged = False
             prevLen = len(queue)
             for ch in channels:
                 if (channels[ch] != None):
                     if (channels[ch]["left"]<=time_quant):
-                        statWorkflow[ch].append(channels[ch])
                         curDone+=1
                         addPoint(statDone, currentTime+channels[ch]["left"], curDone-1 ,curDone)
                     else:
-                        statWorkflow[ch].append(channels[ch])
-                        queue.append({"name":channels[ch]["name"], "got": channels[ch]["got"], "left":channels[ch]["left"]-time_quant})
+                        channels[ch]["left"]-=time_quant
+                        buffer.append(channels[ch])
             currentTime += time_quant
             for ch in channels:
-                if (len(queue)!=0):
-                    r = getNextRequest(queue)
-                    channels[ch] = {"name":r["name"], "got": r["got"], "start":currentTime, "end": currentTime+min(time_quant, r["left"]), "left":r["left"]}
+                if (len(buffer)!=0):
+                    channels[ch] = getNextRequest(buffer)
+                    channels[ch]["start"] = currentTime
+                    channels[ch]["end"] = currentTime+min(time_quant, channels[ch]["left"])
+                    statWorkflow[ch].append({"start":channels[ch]["start"],"end":channels[ch]["end"],"name":channels[ch]["name"]})
+                elif (len(queue)!=0):
+                    queueChanged = True
+                    channels[ch] = getNextRequest(queue)
+                    channels[ch]["start"] = currentTime
+                    channels[ch]["end"] = currentTime+min(time_quant, channels[ch]["left"])
+                    statWorkflow[ch].append({"start":channels[ch]["start"],"end":channels[ch]["end"],"name":channels[ch]["name"]})
                 else:
                     channels[ch] = None
-            
 
-            addPoint(statQueue, currentTime, prevLen, len(queue))
+            if (len(queue)!=0 and len(buffer)<buffer_size):  
+                queueChanged = True
+                while (len(queue)!=0 and len(buffer)<buffer_size):
+                    buffer.append(getNextRequest(queue))
+            
+            if (queueChanged):
+                addPoint(statQueue, currentTime, prevLen, len(queue))
             
         else: # прибыла новая заявка
             lastReq = timeNew
             curGot+=1
             addPoint(statGot, timeNew, curGot-1, curGot)
             statGotTime.append({"name":'t'+str(curGot), "got":timeNew})         
-            # пытаемся добавить в очередь
-            if (len(queue)<queue_length):
+            if (len(buffer)<buffer_size):
+                buffer.append({"name":'t'+str(curGot), "got": timeNew, "left":random(work_stream)})
+            elif (len(queue)<queue_length):
                 queue.append({"name":'t'+str(curGot), "got": timeNew, "left":random(work_stream)})
                 addPoint(statQueue, timeNew, len(queue)-1, len(queue))
             else:
