@@ -11,8 +11,8 @@ matplotlib.use('QT5Agg')
 import matplotlib.pylab as plt
 import numpy as np
 
-from simpleSMO import simpleSMO
-from RR import RR
+# ахах какая странная херь
+from modeling.modeling import modeling
 
 def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -22,7 +22,6 @@ def addPlotToLayout(plot, layout: QLayout):
 def clearLayout(layout: QLayout):
     for i in reversed(range(layout.count())):
         layout.removeItem(layout.itemAt(i))
-
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -39,6 +38,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def getDataFromUI(self):
         return {
+            "discipline": self.comboBox.currentText(),
             "count_channels" : self.channelsSpinBox.value(),
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
@@ -51,14 +51,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
     def calculate_SLOT(self):
         dataFromUI = self.getDataFromUI()
-        if (dataFromUI["discipline"] in ["FIFO", "LIFO"]):
-            thingsToShow = simpleSMO(dataFromUI)
-        elif (dataFromUI["discipline"] == "RR"):
-            thingsToShow = RR(dataFromUI)
-        else:
-            print("неизвестная дисциплина")
-            dataFromUI["discipline"] = "FIFO"
-            thingsToShow = simpleSMO(dataFromUI)
+        
+        thingsToShow = modeling(dataFromUI["discipline"], dataFromUI)
 
         # удаляем отрисованные графики
         clearLayout(self.graphLayout)
@@ -109,30 +103,6 @@ def drawQueue(plot, queue):
     from pylab import Rectangle
     # import matplotlib.lines as mlines
     space = 0
-    # for key_stream in queue:
-    #     for request in queue[key_stream]:
-    #         # Rectangle((x,y),width,heigth)
-    #         #print((request["start"], key_stream+1), request["end"]-request["start"], 1)
-    #         x, y = (request["start"], key_stream+1+space)
-    #         width, heigth = request["end"]-request["start"], 1
-    #         # first variant
-    #         rc = Rectangle((x,y),width,heigth, edgecolor = 'blue', facecolor = 'aqua')
-    #         plot.add_patch(rc)
-    #         # second variant
-    #         # l = mlines.Line2D([x,x+width], [y,y])
-    #         # plot.add_line(l)
-    #         # l = mlines.Line2D([x+width,x+width], [y,y+heigth])
-    #         # plot.add_line(l)
-    #         # l = mlines.Line2D([x,x+width], [y+heigth,y+heigth])
-    #         # plot.add_line(l)
-    #         # l = mlines.Line2D([x,x], [y,y+heigth])
-    #         # plot.add_line(l)
-    #         # third variant
-    #         # plot.plot([x, x+width, x+width, x, x], [y, y, y+heigth,y+heigth, y])
-        
-    #     space += 1
-
-    # four variant
     xarr, yarr, xnextarr, yonearr = [],[],[],[]
     for key_stream in queue:
         for request in queue[key_stream]:

@@ -17,15 +17,7 @@ def addPoint(dict, time, oldvalue, value):
         dict["x"].append(time)
         dict["y"].append(value)
 
-def RR(dataFromUI):
-    input_stream = dataFromUI["input_stream"]
-    count_channels = dataFromUI["count_channels"]
-    work_stream = dataFromUI["work_stream"]
-    queue_length = dataFromUI["queue_length"]
-    count_requests = dataFromUI["count_requests"]
-    discipline = dataFromUI["discipline"]
-    time_quant = dataFromUI["time_quant"]
-    buffer_size = dataFromUI["buffer_size"]
+def RR(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, time_quant, buffer_size, **kwargs):
     currentTime = 0
     # в начале ни одной заявки нет
     statGot = {'x':[0], 'y':[0]}
