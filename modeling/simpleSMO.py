@@ -25,7 +25,7 @@ def addPoint(dict, time, oldvalue, value):
         dict["x"].append(time)
         dict["y"].append(value)
 
-def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_requests, discipline):
+def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, **kwargs):
     currentTime = 0
     # в начале ни одной заявки нет
     statGot = {'x':[0], 'y':[0]}
@@ -118,9 +118,11 @@ def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_req
     addPoint(statRefused, currentTime, curRefused, curRefused)
     addPoint(statQueue, currentTime, len(queue), len(queue))
 
-    return {"statGot":statGot,
-    "statDone":statDone,
-    "statRefused":statRefused,
-    "statQueue":statQueue,
-    "statWorkflow":statWorkflow,
-    "statGotTime":statGotTime}
+    return {
+        "statGot":statGot,
+        "statDone":statDone,
+        "statRefused":statRefused,
+        "statQueue":statQueue,
+        "statWorkflow":statWorkflow,
+        "statGotTime":statGotTime
+    }

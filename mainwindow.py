@@ -31,6 +31,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.CalcBtn.clicked.connect(self.calculate_SLOT)
+        self.comboBox.currentIndexChanged.connect(self.stackedWidget.setCurrentIndex)
+        self.comboBox.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(0)
+
 
     def getDataFromUI(self):
         return {
@@ -39,7 +43,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "count_requests": self.countRequestSpinBox.value(),
             "input_stream": self.inputStreamSpinBox.value(),
             "queue_length": self.queueLengthSpinBox.value(),
-            "work_stream": self.workStreamSpinBox.value()
+            "work_stream": self.workStreamSpinBox.value(),
+            "discipline": self.comboBox.currentText(),
+            "buffer_size": self.bufferSpinBox.value(),
+            "time_quant": self.quantSpinBox.value()
         }
                 
     def calculate_SLOT(self):
