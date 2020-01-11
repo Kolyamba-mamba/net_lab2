@@ -2,7 +2,7 @@ import numpy as np
 from collections import deque
 from modeling.helper import *
 
-def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, time_quant, buffer_size, **kwargs):
+def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, **kwargs):
     currentTime = 0
     statGot = {'x':[0], 'y':[0]}
     statDone = {'x':[0], 'y':[0]}
@@ -75,5 +75,4 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
 
         if (not_empty):
             # находим наиболее быстро обслуженную заявку по GPS
-            
-
+        

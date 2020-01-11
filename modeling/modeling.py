@@ -1,12 +1,20 @@
 from modeling.RR import RR
 from modeling.simpleSMO import simpleSMO
 from modeling.SJN import SJN
+from modeling.W2FQ import W2FQ
+from modeling.WFQ import WFQ
+from modeling.W2FQplus import W2FQplus
+from modeling.DRR import DRR
 
 
 discipline = {
     "FIFO", 
     "LIFO",
-    "RR"
+    "RR",
+    "WFQ",
+    "W2FQ",
+    "W2FQ+",
+    "DRR"
 }
 
 def modeling(discipline, kwargs):
@@ -18,6 +26,14 @@ def modeling(discipline, kwargs):
         res = simpleSMO(**kwargs)
     elif discipline == "SJN":
         res = SJN(**kwargs)
+    elif discipline == "WFQ":
+        res = WFQ(**kwargs)
+    elif discipline == "W2FQ":
+        res = W2FQ(**kwargs)
+    elif discipline == "W2FQ+":
+        res = W2FQplus(**kwargs)
+    elif discipline == "DRR":
+        res = DRR(**kwargs)
     else:
         ValueError("not found discipline")
     
