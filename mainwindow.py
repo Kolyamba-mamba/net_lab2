@@ -31,9 +31,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.CalcBtn.clicked.connect(self.calculate_SLOT)
-        self.comboBox.currentIndexChanged.connect(self.stackedWidget.setCurrentIndex)
+        self.comboBox.currentIndexChanged.connect(self.onObslChange)
         self.comboBox.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.onObslChange(0)
+        self.onChannelsCountChange(self.channelsSpinBox.value())
+
+        self.channelsSpinBox.valueChanged.connect(self.onChannelsCountChange)
+
+    def onObslChange(self, value):
+        """
+        меняем индексы для того чтоб скрывать части юай
+        """
+        showRRSetting = value in [3]
+        showWeigthSetting = value in [5]
+        self.weigthListWdg.setVisible(showWeigthSetting)
+        self.stackedWidget.setCurrentIndex(showRRSetting)
+        
+
+    def makeWeightWidget(self, number):
+        widget = QWidget()
+        layout = QHBoxLayout()
+        layout.addWidget(QLabel(f"приоритет канала {number}"))
+        dsb = QDoubleSpinBox()
+        dsb.setSingleStep(0.05)
+        dsb.setMaximum(1.)
+        dsb.setMinimum(0.)
+        layout.addWidget(dsb)
+        widget.setLayout(layout)
+        item = QListWidgetItem(self.weigthListWdg)
+        item.setSizeHint(widget.sizeHint())
+        self.weigthListWdg.setItemWidget(item, widget)
+
+
+    def onChannelsCountChange(self, value):
+        cnt = self.weigthListWdg.count()
+        if cnt > value:
+            while self.weigthListWdg.count() > value:
+                self.weigthListWdg.takeItem(self.weigthListWdg.count()-1)
+        else:
+            while self.weigthListWdg.count() < value:
+                self.makeWeightWidget(self.weigthListWdg.count()+1)
 
 
     def getDataFromUI(self):
