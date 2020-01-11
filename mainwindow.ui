@@ -167,7 +167,18 @@
             </item>
             <item>
              <property name="text">
+              <string>WFQ</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>W2FQ</string>
+             </property>
+            </item>
+            <item>
+             <item>
+             <property name="text">
+              <string>W2FQ+</string>
              </property>
             </item>
             <item>
