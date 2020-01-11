@@ -235,7 +235,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="weigthListWdg"/>
+         <widget class="QListWidget" name="weigthListWdg">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::NoSelection</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="CalcBtn">
