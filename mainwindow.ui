@@ -170,6 +170,11 @@
               <string>W2FQ</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>DRR</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item row="7" column="0" colspan="2">
