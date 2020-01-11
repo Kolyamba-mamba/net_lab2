@@ -4,7 +4,6 @@
 
 # скорость алгоритма (Rwi) / (w1 + w2 + .. wn), где R - скорость канала, w - приоритеты N каналов
 
-virtualTimeFunction = 
 
 def virtualEndTime(packageNumber :int, numberOfChannel: int):
     pass

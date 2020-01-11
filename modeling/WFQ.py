@@ -35,8 +35,8 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     # name — название заявки
     # got — время её получения (пока не используется)
     # start — время начала её выполнения
-    # end — время конца выполнения
-    # ключи списка — номера каналов
+    # end — время конца выполнения
+    # ключи списка — номера каналов
     ### -1 канал был убран!
 
     statWorkflow = {key:[] for key in range(count_channels)}
@@ -62,17 +62,15 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     while (curGot<count_requests):
         if (timeNew<=timeDone):
             
-
-
-        # находим первую ненулевую заявку в GPS
-        not_empty = False
-        min_end_time = {}
-        for el in channels_gps:
-            if el!= {}:
-                not_empty = True
-                min_end_time = el
-                break
+            # находим первую ненулевую заявку в GPS
+            not_empty = False
+            min_end_time = {}
+            for el in channels_gps:
+                if el!= {}:
+                    not_empty = True
+                    min_end_time = el
+                    break
 
         if (not_empty):
             # находим наиболее быстро обслуженную заявку по GPS
-        
+            pass
