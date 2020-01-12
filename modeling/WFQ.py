@@ -18,7 +18,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     timeNew = 0 # время, когда придёт новая заявка
     numNew = 0 # номер канала, с которого придёт заявка
     timeDone = None # время, когда будет обслужена следующая заявка
-    nameDone = None # имя заявки, которую обслужат следующей
+    numDone = None # номер канала, заявку на котором обслужат следующей
 
     # очередь заявок
     # структура:
@@ -59,36 +59,51 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
 
     # обслуживаемые заявки в симуляции gps
     # вид:
-    # { 0: {"name":'t1', "got": 0, "start":0, "end": 7},
-    #   1: {"name":'t2', "got": 2, "start":2, "end": 11} }
+    # { 0: {"name":'t1', "got": 0, "start":0, "end": 7, "channel":, "totalWork":, "done": , "prevStart":},
+    #   1: {"name":'t2', "got": 2, "start":2, "end": 11,"channel":, "totalWork":, "done": , "prevStart":} }
+    # done — количество выполненной работы
+    # totalWork — общее количество работы, нужное для выполнения заявки
+    # prevStart — время прошлого пересчёта окончания работы
     channels_gps = {key: None for key in range(count_channels)}
 
     while (curGot<count_requests):
-        if (timeDone==None or timeNew<timeDone):
-             timeNew_arr[numNew] = random(input_stream)
+        if (timeDone==None or timeNew<timeDone): # сначала поступает заявка
             if channels_gps[numNew]==None:
                 # добавляем сразу на обработку
-                channels_gps.append({"name":'t'+str(curGot), "got":currentTime, "channel":numNew})
-                # TODO: пересчитать сроки окончания для gps
-                #weights_dict
+                channels_gps[numNew]({"name":'t'+str(curGot), "got":currentTime, "channel":numNew, "totalWork":random(work_stream), "done":0, "end":currentTime, "prevStart":currentTime})
+                for request in channels_gps:
+                    if request!=numNew and channels_gps[request]["end"]!=0:
+                        el = channels_gps[request]
+                        el["done"] += ((el["end"]-el["prevStart"])/el["end"]) * (el["totalWork"]-el["done"])
+                
+                # пересчитать сроки окончания для gps
+                # TODO: выделить в отдельную функцию
+                sum_weight = 0
+                for i in range(count_channels):
+                    if channels_gps[i]!=None:
+                        sum_weight+=weights_dict[i]
+
+                timeDone = None
+                for i in range(count_channels):
+                    el = channels_gps[i]
+                    el["end"] = currentTime + (el["totalWork"]-el["done"])*weights_dict[i]/sum_weight
+                    if timeDone==None or el["end"]<timeDone:
+                        timeDone = el["end"]
+                        numDone = i
             else:
                 # добавляем в общую очередь
-                queue.append({"name":'t'+str(curGot), "got":currentTime, "channel":numNew})
-                timeNew = random(work_stream)
+                queue.append({"name":'t'+str(curGot), "got":currentTime, "channel":numNew, "totalWork":random(work_stream)})
 
-                for el in timeNew_arr:
+            # после добавления новой заявки обновляем время поступления следующей
+            timeNew_arr[numNew] = random(input_stream)
+            timeNew = timeNew_arr[numNew]
+            for el in timeNew_arr:
                 if timeNew_arr[el]<timeNew:
                     timeNew=timeNew_arr[el]
                     numNew = el
 
-        else:
-
-
-            # находим заявку в GPS с наименьшим временем конца
-            min_end_el = channels_gps[0]
-            for el in channels_gps:
-                if channels_gps["end"]<min_end_el["min"]:
-                    min_end_el = el
+        else: # сначала обрабатывается заявка
+            pass
             
                     
             
