@@ -12,7 +12,7 @@ import matplotlib.pylab as plt
 import numpy as np
 
 # ахах какая странная херь
-from modeling.modeling import modeling
+from modeling.modeling import modeling, discipline
 
 def addPlotToLayout(plot, layout: QLayout):
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -36,6 +36,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.onObslChange(0)
         self.onChannelsCountChange(self.channelsSpinBox.value())
 
+        self.comboBox.addItems(discipline)
         self.channelsSpinBox.valueChanged.connect(self.onChannelsCountChange)
 
     def onObslChange(self, value):

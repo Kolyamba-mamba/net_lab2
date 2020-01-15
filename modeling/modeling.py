@@ -8,7 +8,7 @@ from modeling.DRR import DRR
 from modeling.CSWFQ import CSWFQ
 
 
-discipline = {
+discipline = [
     "FIFO", 
     "LIFO",
     "RR",
@@ -18,7 +18,7 @@ discipline = {
     "DRR",
     "CS-WFQ",
     "SFBA"
-}
+]
 
 def modeling(discipline, kwargs):
     res = None
