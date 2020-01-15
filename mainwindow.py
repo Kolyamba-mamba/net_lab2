@@ -42,10 +42,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         меняем индексы для того чтоб скрывать части юай
         """
-        showRRSetting = value in [3]
+        showRRSetting = value in [3, 8]
+        showDRRSetting = value in [8]
         showWeigthSetting = value in [5]
         self.weigthListWdg.setVisible(showWeigthSetting)
         self.stackedWidget.setCurrentIndex(showRRSetting)
+        self.stackedWidget1.setCurrentIndex(showDRRSetting)
         
 
     def makeWeightWidget(self, number):

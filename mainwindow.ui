@@ -245,6 +245,38 @@
          </widget>
         </item>
         <item>
+         <widget class="QStackedWidget" name="stackedWidget1">
+          <property name="currentIndex">
+           <number>2</number>
+          </property>
+          <widget class="QWidget" name="page_none1"/>
+          <widget class="QWidget" name="page_full1">
+           <layout class="QFormLayout" name="formLayout_21">
+           <item row="0" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Кредит</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="bufferSpinBox">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+              <property name="value">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+            </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
          <widget class="QListWidget" name="weigthListWdg">
           <property name="selectionMode">
            <enum>QAbstractItemView::NoSelection</enum>
