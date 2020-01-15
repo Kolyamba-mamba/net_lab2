@@ -185,6 +185,21 @@
               <string>DRR</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>SBFA</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>CS-WFQ</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>W2F2Q</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -328,7 +343,7 @@
      <x>0</x>
      <y>0</y>
      <width>909</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
