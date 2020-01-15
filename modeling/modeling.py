@@ -5,6 +5,7 @@ from modeling.W2FQ import W2FQ
 from modeling.WFQ import WFQ
 from modeling.W2FQplus import W2FQplus
 from modeling.DRR import DRR
+from modeling.CSWFQ import CSWFQ
 
 
 discipline = {
@@ -14,7 +15,9 @@ discipline = {
     "WFQ",
     "W2FQ",
     "W2FQ+",
-    "DRR"
+    "DRR",
+    "CS-WFQ",
+    "SFBA"
 }
 
 def modeling(discipline, kwargs):
@@ -34,6 +37,8 @@ def modeling(discipline, kwargs):
         res = W2FQplus(**kwargs)
     elif discipline == "DRR":
         res = DRR(**kwargs)
+    elif discipline == "CS-WFQ":
+        res = CSWFQ(**kwargs)
     else:
         ValueError("not found discipline")
     
