@@ -21,7 +21,9 @@ class GPS_simulator:
         # prevStart — время прошлого пересчёта окончания работы
         self.channels_gps = {key: None for key in range(count_channels)}
 
-    def addRequest(self, req):
+
+    # добавляем заявку на обслуживание
+    def addRequest(self, req): 
         if (self.channels_gps[req["channel"]] == None) # текущий канал не обслуживается
             for request in channels_gps:
                 if request!=numNew and channels_gps[request]["end"]!=0:
@@ -44,9 +46,12 @@ class GPS_simulator:
         else: # текущий канал обслуживается, ставим в очередь
             (queue[req["channel"]]).append(req)
 
+    # получить имя заявки, которую закончат обслуживать следующей
+    def getNext(self):
+        pass
 
-
-    def getNext(self, request):
+    # обслужить следующую заявку
+    def serve(self):
         pass
 
     
@@ -106,10 +111,13 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
 
     while (curGot<count_requests):
         if (timeDone==None or timeNew<timeDone): # сначала поступает заявка
-            # добавляем сразу на обработку
-            GPS.add({"name":'t'+str(curGot), "got":currentTime, "channel":numNew, "totalWork":random(work_stream), "done":0, "end":currentTime, "prevStart":currentTime})
-            # TODO: добавить на обработку
+            currentTime = timeNew
+            curGot+=1
+            addPoint(statGot, currentTime, curGot-1, curGot)
+            statGotTime.append({"name":'t'+str(curGot), "got":currentTime})
 
+            GPS.add({"name":'t'+str(curGot), "got":currentTime, "channel":numNew, "totalWork":random(work_stream), "done":0, "end":currentTime, "prevStart":currentTime})
+            
             # после добавления новой заявки обновляем время поступления следующей
             timeNew_arr[numNew] = random(input_stream)
             timeNew = timeNew_arr[numNew]
@@ -118,9 +126,58 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
                     timeNew=timeNew_arr[el]
                     numNew = el
 
-        else: # сначала обрабатывается заявка
-            pass
+            freeChannel = None
+            for ch in channels:
+                if (channels[ch]==None):
+                    freeChannel = ch
+                    break
+            if (freeChannel != None): # если канал свободен, обслуживаем заявку сразу
+                timeDone = currentTime + random(work_stream)
+                channels[ch] = {"name":'t'+str(curGot), "got": currentTime, "start":currentTime, "end": timeDone}            
+            else: # иначе пытаемся добавить в очередь
+                if (len(queue)<queue_length):
+                    queue.append({"name":'t'+str(curGot), "got": currentTime})
+                    addPoint(statQueue, currentTime, len(queue)-1, len(queue))
+                else:
+                    curRefused += 1
+                    addPoint(statRefused, currentTime, curRefused-1, curRefused)
             
+        else: # сначала обрабатывается заявка
+            currentTime = channels[numDone]["end"]
+            statWorkflow.append(channels[numDone])
+            curDone+=1
+            addPoint(statDone, currentTime, curDone-1 ,curDone)
+            if (len(queue)==0): # если очередь пуста, то канал остаётся свободен
+                channels[numDone] = None
+
+            else: # в ином случае выполняем следующую заявку
+                req_name = GPS.getNext()
+                GPS.serve()
+
+                for el in queue:
+                    if el["name"]=req_name:
+                        req = el
+                        break
+
+                queue.remove(req)
+                timeDone = currentTime + random(work_stream)
+                req["start"] = currentTime
+                req["end"] = timeDone
+                channels[numDone] = req
+                addPoint(statQueue, currentTime, len(queue)+1, len(queue))
+
+            numDone = None
+            for ch in channels:
+                if channels[ch] != None and (min==None or channels[ch]["end"]<channels[min]["end"]):
+                    min = ch
+
+            if numDone == None:
+                timeDone = None
+            else:
+                timeDone = channels["end"]
+
+            
+                
                     
             
                 

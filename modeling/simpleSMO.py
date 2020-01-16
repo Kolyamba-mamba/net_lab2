@@ -26,7 +26,7 @@ def simpleSMO(input_stream, count_channels, work_stream, queue_length, count_req
     curGot = 0
     curDone = 0
     curRefused = 0
-    timeNew = random(input_stream) # время, когда придёт новая заявка (можно заменить на 0)
+    timeNew = 0 # время, когда придёт новая заявка
 
     # очередь заявок
     # структура:
