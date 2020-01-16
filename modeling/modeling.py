@@ -13,6 +13,7 @@ discipline = [
     "FIFO", 
     "LIFO",
     "RR",
+    "SJN",
     "WFQ",
     "W2FQ",
     "W2FQ+",
