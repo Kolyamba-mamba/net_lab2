@@ -1,6 +1,6 @@
 class GPS_simulator:
-    def init(self, count_channels, weights_dict):
-        self.current_time = 0
+    def __init__(self, count_channels, weights_dict):
+        self.currentTime = 0
         self.count_channels = count_channels
         self.weights_dict = weights_dict
 
@@ -30,7 +30,7 @@ class GPS_simulator:
             (self.queue[req["channel"]]).append(req)
 
     # пересчитать сроки окончания для gps
-    def _recalculateEndTime_():        
+    def _recalculateEndTime_(self):        
         sum_weight = 0
         for i in range(self.count_channels):
             if self.channels_gps[i]!=None:
@@ -60,5 +60,5 @@ class GPS_simulator:
                 channel = ch
 
         if channel != None:
-            req = queue[channel][0]
-            queue[channel].remove(req)
+            req = self.queue[channel][0]
+            self.queue[channel].remove(req)
