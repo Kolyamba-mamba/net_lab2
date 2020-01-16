@@ -6,6 +6,7 @@ from modeling.WFQ import WFQ
 from modeling.W2FQplus import W2FQplus
 from modeling.DRR import DRR
 from modeling.CSWFQ import CSWFQ
+from modeling.W2F2Q import WirelessWFQWorstCase
 
 
 discipline = [
@@ -17,7 +18,11 @@ discipline = [
     "W2FQ+",
     "DRR",
     "CS-WFQ",
-    "SFBA"
+    "SFBA",
+    "Wireless Worst-case Fair Weighted Fair Queueing (W2F2Q)",
+    "Server Based Fairness Approach (SBFA)",
+    "Channel State Independent Wireless Fair Queueing (CS-WFQ)",
+    "Wireless Multiclass Priority Fair Queuing (MPFQ)"
 ]
 
 def modeling(discipline, kwargs):
@@ -37,8 +42,10 @@ def modeling(discipline, kwargs):
         res = W2FQplus(**kwargs)
     elif discipline == "DRR":
         res = DRR(**kwargs)
-    elif discipline == "CS-WFQ":
+    elif discipline == "Channel State Independent Wireless Fair Queueing (CS-WFQ)":
         res = CSWFQ(**kwargs)
+    elif discipline == "Wireless Worst-case Fair Weighted Fair Queueing (W2F2Q)":
+        res = WirelessWFQWorstCase(**kwargs)
     else:
         ValueError("not found discipline")
     
