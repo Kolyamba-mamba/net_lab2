@@ -18,7 +18,7 @@ class GPS_simulator:
 
     # добавляем заявку на обслуживание
     def addRequest(self, req): 
-        if (self.channels_gps[req["channel"]] == None) # текущий канал не обслуживается
+        if (self.channels_gps[req["channel"]] == None): # текущий канал не обслуживается
             for request in self.channels_gps:
                 if request!=numNew and self.channels_gps[request]["end"]!=0:
                     el = self.channels_gps[request]
@@ -45,7 +45,7 @@ class GPS_simulator:
         minTime = None
         name = None
         for ch in self.channels_gps:
-            if ch != None and (minTime = None or ch["end"]<minTime)
+            if ch != None and (minTime == None or ch["end"]<minTime):
                 minTime = ch["end"]
                 name = ch["name"]
         return name
@@ -55,7 +55,7 @@ class GPS_simulator:
         minTime = None
         channel = None
         for ch in self.channels_gps:
-            if self.channels_gps[ch] != None and (minTime = None or self.channels_gps[ch]["end"]<minTime)
+            if self.channels_gps[ch] != None and (minTime == None or self.channels_gps[ch]["end"]<minTime):
                 minTime = self.channels_gps[ch]["end"]
                 channel = ch
 

@@ -100,7 +100,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
                 GPS.serve()
                 #TODO: сделать обработку ситуации, когда элемент с таким именем не в очереди, а уже обрабатывается
                 for el in queue:
-                    if el["name"]=req_name:
+                    if el["name"]==req_name:
                         req = el
                         break
 

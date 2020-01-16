@@ -43,8 +43,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         меняем индексы для того чтоб скрывать части юай
         """
-        showRRSetting = value in [3, 8]
-        showDRRSetting = value in [8]
+        showRRSetting = value in [2, 6]
+        showDRRSetting = value in [6]
         showWeigthSetting = value in [5]
         self.weigthListWdg.setVisible(showWeigthSetting)
         self.stackedWidget.setCurrentIndex(showRRSetting)
