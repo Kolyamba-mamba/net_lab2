@@ -1,62 +1,7 @@
 import numpy as np
 from collections import deque
 from modeling.helper import *
-
-class GPS_simulator:
-    def init(self, count_channels, work_stream, weights_dict):
-        self.current_time = 0
-        self.count_channels = count_channels
-        self.work_stream = work_stream
-        self.weights_dict = weights_dict
-
-        # очередь
-        self.queue = {key: [] for key in range(count_channels)}
-
-        # обслуживаемые заявки
-        # вид:
-        # { 0: {"name":'t1', "got": 0, "start":0, "end": 7, "channel":, "totalWork":, "done": , "prevStart":},
-        #   1: {"name":'t2', "got": 2, "start":2, "end": 11,"channel":, "totalWork":, "done": , "prevStart":} }
-        # done — количество выполненной работы
-        # totalWork — общее количество работы, нужное для выполнения заявки
-        # prevStart — время прошлого пересчёта окончания работы
-        self.channels_gps = {key: None for key in range(count_channels)}
-
-
-    # добавляем заявку на обслуживание
-    def addRequest(self, req): 
-        if (self.channels_gps[req["channel"]] == None) # текущий канал не обслуживается
-            for request in channels_gps:
-                if request!=numNew and channels_gps[request]["end"]!=0:
-                    el = channels_gps[request]
-                    el["done"] += ((el["end"]-el["prevStart"])/el["end"]) * (el["totalWork"]-el["done"])
-            
-            # пересчитать сроки окончания для gps
-            sum_weight = 0
-            for i in range(count_channels):
-                if channels_gps[i]!=None:
-                    sum_weight+=weights_dict[i]
-        
-            timeDone = None
-            for i in range(count_channels):
-                el = channels_gps[i]
-                el["end"] = currentTime + (el["totalWork"]-el["done"])*weights_dict[i]/sum_weight
-                if timeDone==None or el["end"]<timeDone:
-                    timeDone = el["end"]
-                    numDone = i
-        else: # текущий канал обслуживается, ставим в очередь
-            (queue[req["channel"]]).append(req)
-
-    # получить имя заявки, которую закончат обслуживать следующей
-    def getNext(self):
-        pass
-
-    # обслужить следующую заявку
-    def serve(self):
-        pass
-
-    
-
-
+from modeling.gps import *
 
 def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests, discipline, weights_dict, **kwargs):
     currentTime = 0
@@ -107,7 +52,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     statGotTime = []
 
     GPS = GPS_simulator()
-    GPS.init(count_channels, work_stream, weights_dict)
+    GPS.init(count_channels, weights_dict)
 
     while (curGot<count_requests):
         if (timeDone==None or timeNew<timeDone): # сначала поступает заявка
@@ -151,9 +96,9 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
                 channels[numDone] = None
 
             else: # в ином случае выполняем следующую заявку
-                req_name = GPS.getNext()
+                req_name = GPS.getNext() 
                 GPS.serve()
-
+                #TODO: сделать обработку ситуации, когда элемент с таким именем не в очереди, а уже обрабатывается
                 for el in queue:
                     if el["name"]=req_name:
                         req = el
