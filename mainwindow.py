@@ -77,6 +77,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def getDataFromUI(self):
+        weight = [item.value() for item in self.weigthListWdg.findChildren(QDoubleSpinBox)]
         return {
             "discipline": self.comboBox.currentText(),
             "count_channels" : self.channelsSpinBox.value(),
@@ -86,7 +87,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "work_stream": self.workStreamSpinBox.value(),
             "discipline": self.comboBox.currentText(),
             "buffer_size": self.bufferSpinBox.value(),
-            "time_quant": self.quantSpinBox.value()
+            "time_quant": self.quantSpinBox.value(),
+            "weights_dict": weight
         }
                 
     def calculate_SLOT(self):
