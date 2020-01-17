@@ -65,7 +65,9 @@ def WirelessWFQWorstCase(input_stream, count_channels, work_stream, queue_length
                  "done": 0, "end": currentTime, "prevStart": currentTime})
 
             if channel == {}:  # если канал свободен, обслуживаем заявку сразу
-                timeDone = currentTime + random(work_stream)
+                channelsSpeed = [0.2, 0.8]
+                from random import choice
+                timeDone = (currentTime + choice(channelsSpeed))
                 channel = {"name": 't' + str(curGot), "got": currentTime, "start": currentTime, "end": timeDone,
                            "channel": numNew}
             else:  # иначе пытаемся добавить в очередь
@@ -86,7 +88,7 @@ def WirelessWFQWorstCase(input_stream, count_channels, work_stream, queue_length
 
         else:  # сначала обрабатывается заявка
             currentTime = channel["end"]
-            print(channel["channel"])
+
             statWorkflow[channel["channel"]].append(channel)
             curDone += 1
             addPoint(statDone, currentTime, curDone - 1, curDone)
