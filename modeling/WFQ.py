@@ -31,7 +31,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     # структура channels:
     # {"name":'t1', "got": 0, "start":0, "end": 7}
     # вместо внутреннего словаря будет None, если канал простаивает
-    channel = None
+    channel = {}
 
     # статистика по каналам
     # структура statWorkflow:
@@ -63,51 +63,61 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
             GPS.addRequest({"name": 't' + str(curGot), "got": currentTime, "channel": numNew, "totalWork": random(work_stream),
                      "done": 0, "end": currentTime, "prevStart": currentTime})
 
-            # после добавления новой заявки обновляем время поступления следующей
-            timeNew_arr[numNew] = random(input_stream)
-            timeNew = timeNew_arr[numNew]
-            for el in timeNew_arr:
-                if timeNew_arr[el] < timeNew:
-                    timeNew = timeNew_arr[el]
-                    numNew = el
-
-
-            if channel is not None:  # если канал свободен, обслуживаем заявку сразу
+            if channel == {}:  # если канал свободен, обслуживаем заявку сразу
                 timeDone = currentTime + random(work_stream)
-                channel = {"name": 't' + str(curGot), "got": currentTime, "start": currentTime, "end": timeDone}
+                channel = {"name": 't' + str(curGot), "got": currentTime, "start": currentTime, "end": timeDone, "channel":numNew}
             else:  # иначе пытаемся добавить в очередь
                 if len(queue) < queue_length:
-                    queue.append({"name": 't' + str(curGot), "got": currentTime})
+                    queue.append({"name": 't' + str(curGot), "got": currentTime, "channel":numNew})
                     addPoint(statQueue, currentTime, len(queue) - 1, len(queue))
                 else:
                     curRefused += 1
                     addPoint(statRefused, currentTime, curRefused - 1, curRefused)
 
+            # после добавления новой заявки обновляем время поступления следующей
+            timeNew_arr[numNew] = random(input_stream)
+            timeNew = timeNew_arr[numNew]
+            for el in range(len(timeNew_arr)):
+                if timeNew_arr[el] < timeNew:
+                    timeNew = timeNew_arr[el]
+                    numNew = el
+
         else:  # сначала обрабатывается заявка
             currentTime = channel["end"]
+            print(channel["channel"])
             statWorkflow[channel["channel"]].append(channel)
             curDone += 1
             addPoint(statDone, currentTime, curDone - 1, curDone)
             if len(queue) == 0:  # если очередь пуста, то канал остаётся свободен
-                channel = None
+                channel = {}
 
             else:  # в ином случае выполняем следующую заявку
                 req_name = GPS.getNext()
-                GPS.serve()
-                # TODO: сделать обработку ситуации, когда элемент с таким именем не в очереди, а уже обрабатывается
-                for el in queue:
-                    if el["name"] == req_name:
-                        req = el
-                        break
+                if (req_name != None):
+                    req = None
+                    # цикл для ситуаций, когда элемент с таким именем не в очереди, а уже обрабатывается
+                    # такие элементы пропускаются
+                    while req is None and req_name is not None: 
+                        req_name = GPS.getNext()
+                        print(req_name)
+                        print(queue)
+                        if req_name is None:
+                            break
+                        GPS.serve()
+                        for el in queue:
+                            if el["name"] == req_name:
+                                req = el
+                                break
+                
+                    if req_name is not None:
+                        queue.remove(req)
+                        timeDone = currentTime + random(work_stream)
+                        req["start"] = currentTime
+                        req["end"] = timeDone
+                        channel = req
+                        addPoint(statQueue, currentTime, len(queue) + 1, len(queue))
 
-                queue.remove(req)
-                timeDone = currentTime + random(work_stream)
-                req["start"] = currentTime
-                req["end"] = timeDone
-                channel = req
-                addPoint(statQueue, currentTime, len(queue) + 1, len(queue))
-
-            if channel is None:
+            if channel != {}:
                 timeDone = None
             else:
                 timeDone = channel["end"]
@@ -117,7 +127,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     addPoint(statDone, currentTime, curDone, curDone)
     addPoint(statRefused, currentTime, curRefused, curRefused)
     addPoint(statQueue, currentTime, len(queue), len(queue))
-
+    print("statWorkflow: ", statWorkflow)
 
     return {
         "statGot":statGot,
