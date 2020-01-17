@@ -99,8 +99,6 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
                     # такие элементы пропускаются
                     while req is None and req_name is not None: 
                         req_name = GPS.getNext()
-                        print(req_name)
-                        print(queue)
                         if req_name is None:
                             break
                         GPS.serve()
@@ -117,9 +115,10 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
                         channel = req
                         addPoint(statQueue, currentTime, len(queue) + 1, len(queue))
 
-            if channel != {}:
+            if channel == {}:
                 timeDone = None
             else:
+                print(channel)
                 timeDone = channel["end"]
                 
     # добавляем точки на краю
@@ -127,7 +126,6 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
     addPoint(statDone, currentTime, curDone, curDone)
     addPoint(statRefused, currentTime, curRefused, curRefused)
     addPoint(statQueue, currentTime, len(queue), len(queue))
-    print("statWorkflow: ", statWorkflow)
 
     return {
         "statGot":statGot,

@@ -56,8 +56,6 @@ class GPS_simulator:
 
     # обслужить заявку
     def serve(self):
-        print("serve")
-        print(self.channels_gps)
         minTime = None
         channel = None
         for ch in self.channels_gps:
@@ -71,7 +69,6 @@ class GPS_simulator:
         self.currentTime = minTime
         
         if len(self.queue[channel]) > 0:
-            print("ы")
             req = self.queue[channel][0]
             self.queue[channel].remove(req)
             self.channels_gps[channel] = req
