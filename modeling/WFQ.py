@@ -84,7 +84,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
 
         else:  # сначала обрабатывается заявка
             currentTime = channel["end"]
-            print(channel["channel"])
+
             statWorkflow[channel["channel"]].append(channel)
             curDone += 1
             addPoint(statDone, currentTime, curDone - 1, curDone)

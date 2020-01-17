@@ -64,18 +64,19 @@ class GPS_simulator:
             if self.channels_gps[ch] is not None and (minTime is None or self.channels_gps[ch]["end"] < minTime):
                 minTime = self.channels_gps[ch]["end"]
                 channel = ch
-        print(channel)
+
         if channel is None:
             return
 
         self.currentTime = minTime
         
         if len(self.queue[channel]) > 0:
+            print("ы")
             req = self.queue[channel][0]
             self.queue[channel].remove(req)
-            self.channels_gps[ch] = req
+            self.channels_gps[channel] = req
         else:
-            self.channels_gps[ch] = None
+            self.channels_gps[channel] = None
 
         self._recalculateEndTime_()
 
