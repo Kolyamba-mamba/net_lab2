@@ -12,12 +12,11 @@ from modeling.W2F2Q import WirelessWFQWorstCase
 discipline = [
     "FIFO", 
     "LIFO",
-    "RR",
+    "DRR",
     "SJN",
     "WFQ",
     "W2FQ",
     "W2FQ+",
-    "DRR",
     "CS-WFQ",
     "SFBA",
     "Wireless Worst-case Fair Weighted Fair Queueing (W2F2Q)",
@@ -29,7 +28,7 @@ discipline = [
 def modeling(discipline, kwargs):
     res = None
 
-    if discipline == "RR":
+    if discipline == "DRR":
         res = RR(**kwargs)
     elif discipline in ["FIFO", "LIFO", "RAND"]:
         res = simpleSMO(**kwargs)
@@ -41,8 +40,6 @@ def modeling(discipline, kwargs):
         res = W2FQ(**kwargs)
     elif discipline == "W2FQ+":
         res = W2FQplus(**kwargs)
-    elif discipline == "DRR":
-        res = DRR(**kwargs)
     elif discipline == "Channel State Independent Wireless Fair Queueing (CS-WFQ)":
         res = CSWFQ(**kwargs)
     elif discipline == "Wireless Worst-case Fair Weighted Fair Queueing (W2F2Q)":
