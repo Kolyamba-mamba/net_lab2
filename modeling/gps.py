@@ -18,13 +18,16 @@ class GPS_simulator:
 
     # добавляем заявку на обслуживание
     def addRequest(self, req):
-        if self.channels_gps[req["channel"]] is None:  # текущий канал не обслуживается
-            for request in self.channels_gps:
-                if request != numNew and self.channels_gps[request]["end"] != 0:
-                    el = self.channels_gps[request]
-                    el["done"] += ((el["end"] - el["prevStart"]) / el["end"]) * (el["totalWork"] - el["done"])
+        numNew = req["channel"]
 
+        if self.channels_gps[numNew] is None:  # текущий канал не обслуживается
+            for request in self.channels_gps:
+                el = self.channels_gps[request]
+                if request != numNew and el is not None and el["end"]!=0:
+                    el["done"] += ((el["end"] - el["prevStart"]) / el["end"]) * (el["totalWork"] - el["done"])
+                    el["prevStart"] = self.currentTime
             self._recalculateEndTime_()
+            self.channels_gps[numNew] = req
 
         else:  # текущий канал обслуживается, ставим в очередь
             (self.queue[req["channel"]]).append(req)
@@ -35,10 +38,11 @@ class GPS_simulator:
         for i in range(self.count_channels):
             if self.channels_gps[i] is not None:
                 sum_weight += self.weights_dict[i]
-
-        for i in range(self.count_channels):
-            el = self.channels_gps[i]
-            el["end"] = self.currentTime + (el["totalWork"] - el["done"]) * self.weights_dict[i] / sum_weight
+        if sum_weight != 0: # если равно нулю, то заявок нет, пересчитывать не нужно
+            for i in range(self.count_channels):
+                if self.channels_gps[i] is not None:
+                    el = self.channels_gps[i]
+                    el["end"] = self.currentTime + (el["totalWork"] - el["done"]) * self.weights_dict[i] / sum_weight
 
     # получить имя заявки, которую закончат обслуживать следующей
     def getNext(self):

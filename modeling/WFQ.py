@@ -29,8 +29,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
 
     # текущее состояние каналов
     # структура channels:
-    # { 0: {"name":'t1', "got": 0, "start":0, "end": 7},
-    #   1: {"name":'t2', "got": 2, "start":2, "end": 11} }
+    # {"name":'t1', "got": 0, "start":0, "end": 7}
     # вместо внутреннего словаря будет None, если канал простаивает
     channel = None
 
@@ -61,7 +60,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
             addPoint(statGot, currentTime, curGot - 1, curGot)
             statGotTime.append({"name": 't' + str(curGot), "got": currentTime})
 
-            GPS.add({"name": 't' + str(curGot), "got": currentTime, "channel": numNew, "totalWork": random(work_stream),
+            GPS.addRequest({"name": 't' + str(curGot), "got": currentTime, "channel": numNew, "totalWork": random(work_stream),
                      "done": 0, "end": currentTime, "prevStart": currentTime})
 
             # после добавления новой заявки обновляем время поступления следующей
@@ -86,7 +85,7 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
 
         else:  # сначала обрабатывается заявка
             currentTime = channel["end"]
-            statWorkflow.update(channel)
+            statWorkflow[channel["channel"]].append(channel)
             curDone += 1
             addPoint(statDone, currentTime, curDone - 1, curDone)
             if len(queue) == 0:  # если очередь пуста, то канал остаётся свободен
@@ -112,3 +111,19 @@ def WFQ(input_stream, count_channels, work_stream, queue_length, count_requests,
                 timeDone = None
             else:
                 timeDone = channel["end"]
+                
+    # добавляем точки на краю
+    addPoint(statGot, currentTime, curGot, curGot)
+    addPoint(statDone, currentTime, curDone, curDone)
+    addPoint(statRefused, currentTime, curRefused, curRefused)
+    addPoint(statQueue, currentTime, len(queue), len(queue))
+
+
+    return {
+        "statGot":statGot,
+        "statDone":statDone,
+        "statRefused":statRefused,
+        "statQueue":statQueue,
+        "statWorkflow":statWorkflow,
+        "statGotTime":statGotTime
+    }
